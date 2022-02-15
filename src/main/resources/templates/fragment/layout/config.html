@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="common_script">
+        <!-- Bootstrap core JavaScript-->
+        <script th:src="@{/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"
+                src="vendor/jquery/jquery.min.js"></script>
+        <script th:src="@{/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"
+                src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Core plugin JavaScript-->
+        <script th:src="@{/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"
+                src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+        <!-- Custom scripts for all pages-->
+        <script th:src="@{/bootstrap/js/sb-admin-2.min.js}"
+                src="js/sb-admin-2.min.js"></script>
+
+        <!-- Page level plugins -->
+        <script th:src="@{/bootstrap/vendor/chart.js/Chart.min.js}"
+                src="vendor/chart.js/Chart.min.js"></script>
+
+        <!-- Page level custom scripts -->
+        <script th:src="@{/bootstrap/js/demo/chart-area-demo.js}"
+                src="js/demo/chart-area-demo.js"></script>
+        <script th:src="@{/bootstrap/js/demo/chart-area-demo.js}"
+                src="js/demo/chart-pie-demo.js"></script>
+    </th:block>
+</body>
+</html>
