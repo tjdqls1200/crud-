@@ -1,16 +1,20 @@
-package toyProject.juniorForum.model;
+package toyProject.juniorForum.domain.post;
 
 import lombok.Data;
 
 @Data
 public class Post {
     private long id;
-    private String postName;
+    private String title;
     private String writer;
     private int postRead;
 
-    public Post(String postName, String writer) {
-        this.postName = postName;
+    public Post() {
+
+    }
+
+    public Post(String title, String writer) {
+        this.title = title;
         this.writer = writer;
         this.postRead = 0;
     }

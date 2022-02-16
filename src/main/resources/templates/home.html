@@ -4,41 +4,7 @@
 </head>
 <body id="page-top">
     <div id="wrapper">
-        <!-- 사이드바 -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-            <!-- 메인홈 -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="home.html">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">개발 포럼</div>
-            </a>
-            <hr class="sidebar-divider my-0">
-            <!-- 로그인 -->
-            <li class="nav-item active">
-                <a class="nav-link" href="home.html">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>로그인</span></a>
-            </li>
-            <hr class="sidebar-divider">
-            <!-- 글쓰기 -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-                    aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>글쓰기</span>
-                </a>
-            </li>
-            <!-- 게시판 -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-                   aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>게시판</span>
-                </a>
-            </li>
-            <hr class="sidebar-divider">
-        </ul>
+        <th:block th:replace="~{/fragment/layout/sidebar :: common_side(null)}"></th:block>
         <div id="content-wrapper" class="d-flex flex-column">
             <!-- Main Content -->
             <div id="content">

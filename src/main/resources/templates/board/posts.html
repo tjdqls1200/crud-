@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/fragment/layout/head :: common_head}">
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <th:block th:replace="~{/fragment/layout/sidebar :: common_side('board')}"></th:block>
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <!--/* header */-->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow"></nav>
+            <div class="container-fluid">
+                <h2>
+                    게시판
+                </h2>
+            </div>
+            <div class="container-fluid col-md-8">
+                <div>
+                    <table class="table table-striped text-center">
+                        <thead>
+                            <tr>
+                                <th scope="col">번호</th>
+                                <th scope="col">제목</th>
+                                <th scope="col">작성자</th>
+                                <th scope="col">조회수</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr scope="row" th:each="post : ${posts}" th:object="${post}">
+                                <td><a href="../home.html" th:href="@{|/board/post/*{id}|}" th:text="*{id}">번호</a></td>
+                                <td><a href="../home.html" th:href="@{|/board/post/*{id}|}" th:text="*{postName}">제목</a></td>
+                                <td th:text="*{writer}">작성자</td>
+                                <td th:text="*{postRead}">조회수</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Search Bar -->
+                <form class="d-none d-sm-inline-block form-inline mr-auto mr-md-3 my-2 my-md-0 mw-100 navbar-search float-md-right">
+                    <div class="input-group">
+                        <label for="search"></label>
+                        <input type="text" id="search" class="form-control bg-light border-0 small" placeholder="Search for..."
+                               aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!--/* Footer */-->
+        <div th:replace="~{/fragment/layout/footer :: common_footer}"> </div>
+    </div>
+</div>
+<th:block th:replace="~{fragment/layout/config :: common_script}"></th:block>
+</body>
+
+</html>
