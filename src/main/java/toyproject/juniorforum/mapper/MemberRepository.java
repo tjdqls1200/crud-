@@ -1,6 +1,7 @@
-package toyProject.juniorForum.domain.member;
+package toyproject.juniorforum.mapper;
 
 import org.springframework.stereotype.Repository;
+import toyproject.juniorforum.domain.Member;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

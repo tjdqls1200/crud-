@@ -1,4 +1,4 @@
-package toyProject.juniorForum.domain.member;
+package toyproject.juniorforum.domain;
 
 import lombok.Data;
 

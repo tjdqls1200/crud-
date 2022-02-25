@@ -17,25 +17,24 @@
         <hr class="sidebar-divider my-0">
         <!-- 로그인 -->
         <li class="nav-item" th:classappend="${status} == 'login'? 'active'">
-            <a class="nav-link" href="home" th:href="@{/}">
+            <a class="nav-link" href="home" th:href="@{/home/login}">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
-                <span>로그인</span></a>
+                <span>로그인</span>
+            </a>
         </li>
         <hr class="sidebar-divider">
         <!-- 글쓰기 -->
         <li class="nav-item" th:classappend="${status} == 'write' ? 'active'">
-            <a class="nav-link collapsed" href="#" th:href="@{/}" data-toggle="collapse" data-target="#collapseTwo"
-               aria-expanded="true" aria-controls="collapseTwo">
-                <i class="fas fa-fw fa-cog"></i>
+            <a class="nav-link" href="#" th:href="@{/board}">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>글쓰기</span>
             </a>
         </li>
         <hr class="sidebar-divider">
         <!-- 게시판 -->
         <li class="nav-item" th:classappend="${status} == 'board' ? 'active'">
-            <a class="nav-link collapsed" href="#" th:href="@{/board/list}" data-toggle="collapse" data-target="#collapseTwo"
-               aria-expanded="true" aria-controls="collapseTwo">
-                <i class="fas fa-fw fa-cog"></i>
+            <a class="nav-link" href="#" th:href="@{/board/list}">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>게시판</span>
             </a>
         </li>

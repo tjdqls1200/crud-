@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/fragment/layout/head :: common_head}">
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <th:block th:replace="~{/fragment/layout/sidebar :: common_side(write)}"></th:block>
+    <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="contents">
+            <!-- header -->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow"></nav>
+            <!-- Page Content -->
+
+            <form class="container-fluid" th:action th:object="${board}" method="post">
+                <div th:if="${#fields.hasGlobalErrors()}">
+                    <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
+                </div>
+                <!--/* input : 제목, 내용 */-->
+                <div>
+                    <label for="title" th:text="#{label.board.title}">제목</label>
+                    <input type="text" id="title" th:field="*{title}"
+                           th:errorclass="field-error" class="form-control" placeholder="제목을 입력하세요.">
+                    <div class="field-error" th:errors="*{title}">제목 오류</div>
+                </div>
+                <div>
+                    <label for="summernote" th:text="#{label.board.content}">내용</label>
+                    <textarea id="summernote" th:field="*{content}"
+                              th:errorclass="field-error" class="form-control" placeholder="내용을 입력하세요.">
+                    </textarea>
+                    <div class="field-error" th:errors="*{content}">내용 오류</div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <button class="w-100 btn btn-primary btn-lg" type="submit" th:text="#{button.save}">저장</button>
+                    </div>
+                    <div class="col">
+                        <button class="w-100 btn btn-secondary btn-lg"
+                                onclick="location.href='items.html'"
+                                th:onclick="|location.href='@{/board/boardList}'|"
+                                type="button" th:text="#{button.cancel}">취소</button>
+                    </div>
+                </div>
+                <script>
+                    $('#summernote').summernote({
+                        placeholder: '내용을 입력하세요.',
+                        tabsize: 2,
+                        height: 300
+                    });
+                </script>
+            </form>
+        </div>
+        <!-- Footer -->
+        <div th:replace="~{/fragment/layout/footer :: common_footer}"> </div>
+    </div>
+</div>
+<th:block th:replace="~{fragment/layout/config :: common_script}"></th:block>
+</body>
+
+</html>

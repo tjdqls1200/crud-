@@ -22,18 +22,28 @@
                                 <th scope="col">번호</th>
                                 <th scope="col">제목</th>
                                 <th scope="col">작성자</th>
+                                <th scope="col">작성일</th>
+                                <th scope="col">수정일</th>
                                 <th scope="col">조회수</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr scope="row" th:each="post : ${posts}" th:object="${post}">
-                                <td><a href="../home.html" th:href="@{|/board/post/*{id}|}" th:text="*{id}">번호</a></td>
-                                <td><a href="../home.html" th:href="@{|/board/post/*{id}|}" th:text="*{postName}">제목</a></td>
+                            <tr scope="row" th:each="board : ${boardList}" th:object="${board}">
+                                <td th:text="*{boardId}">번호</td>
+                                <td><a href="index.html" th:href="@{|/board/{boardId}(boardId=*{boardId})|}" th:text="*{title}">제목</a></td>
                                 <td th:text="*{writer}">작성자</td>
-                                <td th:text="*{postRead}">조회수</td>
+                                <td th:text="${#temporals.format(board.createTime, 'yy-MM-dd HH:mm')}">작성일</td>
+                                <td th:text="${#temporals.format(board.updateTime, 'yy-MM-dd HH:mm')}">수정일</td>
+                                <td th:text="*{hit}">조회수</td>
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                <div class="col">
+                    <button class="w-100 btn btn-primary btn-lg"
+                            onclick="location.href='items.html'"
+                            th:onclick="|location.href='@{/board}'|"
+                            type="button" th:text="#{button.write}">글쓰기</button>
                 </div>
                 <!-- Search Bar -->
                 <form class="d-none d-sm-inline-block form-inline mr-auto mr-md-3 my-2 my-md-0 mw-100 navbar-search float-md-right">

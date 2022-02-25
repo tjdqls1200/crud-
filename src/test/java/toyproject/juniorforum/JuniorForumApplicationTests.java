@@ -1,4 +1,4 @@
-package toyProject.juniorForum;
+package toyproject.juniorforum;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

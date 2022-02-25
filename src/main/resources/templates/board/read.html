@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/fragment/layout/head :: common_head}">
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <th:block th:replace="~{/fragment/layout/sidebar :: common_side('board')}"></th:block>
+    <div id="content-wrapper" class="d-flex flex-column col-md-8">
+        <div id="content" th:object="${board}" >
+            <!--/* header */-->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow"></nav>
+
+            <!-- Page Content -->
+            <h2 th:if="${param.status}" th:text="'저장 완료'"></h2>
+            <div>
+                <label for="title" th:text="#{label.board.title}">title</label>
+                <input type="text" id="title" class="form-control" th:field="*{title}" readonly>
+            </div>
+            <div>
+                <label for="createTime" th:text="#{label.board.createTime}">작성일</label>
+                <input type="text" id=createTime class="form-control"
+                       th:value="${#temporals.format(board.createTime, 'yy-MM-dd')}" readonly>
+            </div>
+
+            <div>
+                <label for="read" th:text="#{label.board.read}">조회수</label>
+                <input type="text" id="read" class="form-control" th:field="*{hit}" readonly>
+            </div>
+            <div>
+                <label for="contents" th:text="#{label.board.content}">contents</label>
+                <input type="text" id="contents" class="form-control" th:field="*{content}" readonly>
+            </div>
+        </div>
+        <div>
+            <button class="w-100 btn btn-primary btn-lg" onclick="location.href='#'"
+                    th:onclick="|location.href='@{/board/{boardId}/(boardId=*{boardId})}'|"
+                    type="button" th:text="#{button.edit}">수정
+            </button>
+        </div>
+            <button class="w-100 btn btn-secondary btn-lg" onclick="location.href='#'"
+                    th:onclick="|location.href='@{/board/list}'|"
+                    type="button" th:text="#{button.list}">목록으로
+
+            </button>
+        <div>
+
+        </div>
+        <!--/* Footer */-->
+        <div th:replace="~{/fragment/layout/footer :: common_footer}"> </div>
+    </div>
+</div>
+<th:block th:replace="~{fragment/layout/config :: common_script}"></th:block>
+</body>
+
+</html>
