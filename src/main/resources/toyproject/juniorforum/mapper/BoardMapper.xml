@@ -17,7 +17,7 @@
         VALUES (#{title}, #{writer}, #{content}, now())
     </insert>
 
-    <select id="read" resultType="BoardVO">
+    <select id="read" resultType="BoardVO" resultMap="boardMap">
         SELECT * FROM tbl_board WHERE board_id = #{boardId}
     </select>
 

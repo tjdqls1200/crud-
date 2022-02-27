@@ -22,17 +22,20 @@ import toyproject.juniorforum.service.BoardServiceImpl;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMybatis
 @Slf4j
 class BoardMapperTest {
-    @Autowired
-    private BoardMapper boardMapper;
+    private final BoardMapper boardMapper;
+
+    private final BoardService boardService;
 
     @Autowired
-    private BoardServiceImpl boardService;
+    public BoardMapperTest(BoardMapper boardMapper, BoardServiceImpl boardService) {
+        this.boardMapper = boardMapper;
+        this.boardService = boardService;
+    }
 
     @DisplayName("리스트 가져오기")
     @Test
@@ -59,16 +62,16 @@ class BoardMapperTest {
         boardDTO.setContent("테스트내용");
         boardDTO.setWriter("테스트작성자");
 
+
         //when
         int result = boardService.create(boardDTO);
-        BoardVO savedBoard = boardService.read(boardDTO.getBoardId());
+        int boardDtoId = boardDTO.getBoardId();
+        BoardVO boardVO = boardService.read(boardDtoId);
 
         //then
         assertThat(result).isEqualTo(1);
-        log.info("---------------- create test ----------------");
-        log.info(String.valueOf(savedBoard.getTitle()));
-        log.info(String.valueOf(boardDTO.getBoardId()));
-        assertThat(savedBoard.getBoardId()).isEqualTo(boardDTO.getBoardId());
+        assertThat(boardService.read(boardDTO.getBoardId()).getBoardId());
+        assertThat(boardDtoId).isEqualTo(boardVO.getBoardId());
 
     }
 }
