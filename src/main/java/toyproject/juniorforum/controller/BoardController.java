@@ -32,14 +32,14 @@ public class BoardController {
     }
 
     @GetMapping("/{boardId}")
-    public String read(@PathVariable Long boardId, Model model) {
+    public String read(@PathVariable int boardId, Model model) {
         BoardVO board = boardService.read(boardId);
         model.addAttribute("board", board);
         return "board/read";
     }
 
     @GetMapping("/{boardId}/update")
-    public String updateForm(@PathVariable Long boardId, Model model) {
+    public String updateForm(@PathVariable int boardId, Model model) {
         BoardVO boardVO = boardService.read(boardId);
         BoardDTO board = boardVO.convertToDTO();
         model.addAttribute("board", board);

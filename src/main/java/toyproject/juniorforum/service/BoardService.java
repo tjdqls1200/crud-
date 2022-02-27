@@ -11,7 +11,7 @@ public interface BoardService {
 
     int create(BoardDTO board);
 
-    BoardVO read(Long boardId);
+    BoardVO read(int boardId);
 
     int update(BoardDTO board);
 }

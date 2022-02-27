@@ -27,6 +27,5 @@
             content = #{content},
             update_time = now()
         WHERE board_id = #{boardId}
-
     </update>
 </mapper>

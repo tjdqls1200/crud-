@@ -17,7 +17,7 @@ public interface BoardMapper {
     int insert(BoardDTO board);
 
     //Read
-    BoardVO read(Long boardId);
+    BoardVO read(int boardId);
 
     //Update
     int update(BoardDTO board);
