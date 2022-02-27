@@ -28,7 +28,6 @@ import static org.assertj.core.api.Assertions.*;
 @Slf4j
 class BoardMapperTest {
     private final BoardMapper boardMapper;
-
     private final BoardService boardService;
 
     @Autowired
