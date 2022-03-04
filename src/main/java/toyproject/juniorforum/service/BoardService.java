@@ -6,10 +6,9 @@ import toyproject.juniorforum.domain.BoardVO;
 import java.util.List;
 
 public interface BoardService {
+    int create(BoardDTO board);
 
     List<BoardVO> getList();
-
-    int create(BoardDTO board);
 
     BoardVO read(int boardId);
 

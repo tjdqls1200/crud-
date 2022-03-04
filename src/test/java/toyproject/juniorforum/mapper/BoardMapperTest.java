@@ -6,71 +6,100 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
+import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import toyproject.juniorforum.domain.BoardDTO;
 import toyproject.juniorforum.domain.BoardVO;
-import toyproject.juniorforum.service.BoardService;
-import toyproject.juniorforum.service.BoardServiceImpl;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-@AutoConfigureMybatis
+
+@MybatisTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Slf4j
 class BoardMapperTest {
-    private final BoardMapper boardMapper;
-    private final BoardService boardService;
-
     @Autowired
-    public BoardMapperTest(BoardMapper boardMapper, BoardServiceImpl boardService) {
-        this.boardMapper = boardMapper;
-        this.boardService = boardService;
+    private BoardMapper boardMapper;
+
+    @BeforeEach
+    void setup() {
     }
 
-    @DisplayName("리스트 가져오기")
+    @DisplayName("게시글 읽기")
     @Test
-    public void getList() {
-
+    void read() {
+        //given
         //when
-        int id = 1;
-        List<BoardVO> list = boardService.getList();
+        BoardVO boardVO = boardMapper.read(1);
 
         //then
-        for (BoardVO boardVO : list) {
-            assertThat(boardVO.getBoardId()).isEqualTo(id);
-            id++;
-        }
+        assertThat(boardVO.getBoardId()).isEqualTo(1);
+        assertThat(boardVO.getTitle()).isEqualTo("테스트1");
     }
 
-    @Transactional
-    @DisplayName("게시글 작성")
+    @DisplayName("게시글 생성")
     @Test
-    public void create() {
+    void create() {
         //given
-        BoardDTO boardDTO = new BoardDTO();
-        boardDTO.setTitle("테스트제목");
-        boardDTO.setContent("테스트내용");
-        boardDTO.setWriter("테스트작성자");
-
+        BoardDTO boardDTO = BoardDTO.builder()
+                .title("테스트제목1")
+                .content("테스트내용1")
+                .writer("테스트작가1")
+                .build();
 
         //when
-        int result = boardService.create(boardDTO);
-        int boardDtoId = boardDTO.getBoardId();
-        BoardVO boardVO = boardService.read(boardDtoId);
+        int result = boardMapper.insert(boardDTO);
+        // BoardVO boardVO = boardMapper.read(boardDTO.getBoardId());
 
         //then
         assertThat(result).isEqualTo(1);
-        assertThat(boardService.read(boardDTO.getBoardId()).getBoardId());
-        assertThat(boardDtoId).isEqualTo(boardVO.getBoardId());
+//        assertThat(boardVO.getTitle()).isEqualTo("테스트제목1");
+//        assertThat(boardVO.getContent()).isEqualTo("테스트내용1");
+//        assertThat(boardVO.getWriter()).isEqualTo("테스트작가1");
+    }
 
+    @DisplayName("게시글 목록")
+    @Test
+    void list() {
+        //given
+        BoardDTO board1 = BoardDTO.builder()
+                .title("테스트제목1")
+                .content("테스트내용1")
+                .writer("테스트작가1")
+                .build();
+
+        //when
+        boardMapper.insert(board1);
+
+        //then
+        List<BoardVO> list = boardMapper.getList();
+        BoardVO lastCreatedBoard = list.get(list.size() - 1);
+        assertThat(lastCreatedBoard.getTitle()).isEqualTo("테스트제목1");
+    }
+
+    @DisplayName("게시글 업데이트")
+    @Test
+    void update() {
+        //given
+        BoardDTO board1 = BoardDTO.builder()
+                .title("테스트제목1")
+                .content("테스트내용1")
+                .writer("테스트작가1")
+                .build();
+        boardMapper.insert(board1);
+
+        //when
+        board1.setTitle("테스트제목2");
+        boardMapper.update(board1);
+
+        //then
+        BoardVO boardVO = boardMapper.read(board1.getBoardId());
+        assertThat(boardVO.getTitle()).isEqualTo("테스트제목2");
     }
 }

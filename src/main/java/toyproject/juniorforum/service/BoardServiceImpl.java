@@ -1,6 +1,7 @@
 package toyproject.juniorforum.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import toyproject.juniorforum.domain.BoardDTO;
 import toyproject.juniorforum.domain.BoardVO;
@@ -13,15 +14,14 @@ import java.util.List;
 public class BoardServiceImpl implements BoardService {
 
     private final BoardMapper boardMapper;
-
-    @Override
-    public List<BoardVO> getList() {
-         return boardMapper.getList();
-    }
-
     @Override
     public int create(BoardDTO board) {
         return boardMapper.insert(board);
+    }
+
+    @Override
+    public List<BoardVO> getList() {
+        return boardMapper.getList();
     }
 
     @Override

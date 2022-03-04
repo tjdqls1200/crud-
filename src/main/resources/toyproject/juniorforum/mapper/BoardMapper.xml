@@ -14,7 +14,7 @@
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="boardId" parameterType="BoardDTO">
         INSERT INTO tbl_board(title, content, writer, update_time)
-        VALUES (#{title}, #{writer}, #{content}, now())
+        VALUES (#{title}, #{content}, #{writer}, now())
     </insert>
 
     <select id="read" resultType="BoardVO" resultMap="boardMap">
