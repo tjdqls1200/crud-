@@ -10,19 +10,21 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import toyproject.juniorforum.domain.BoardDTO;
-import toyproject.juniorforum.domain.BoardVO;
 import toyproject.juniorforum.mapper.BoardMapper;
-import toyproject.juniorforum.service.BoardServiceImpl;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @Slf4j
 class BoardServiceImplTest {
+    /**
+     *  Spy : 실제 객체로 또는 Stub 객체로도 활용할 수 있으며,  특정 메서드가 제대로 호출되었는지 여부 확인 가능 (verify)
+     *  Stub : 테스트에서 호출된 요청에 대해 미리 준비해둔 결과를 제공(when().thenReturn() OR doAnswer().when() ..)
+     **/
     @Spy
     private BoardMapper boardMapper;
 
     @Spy
-    @InjectMocks
+    @InjectMocks //의존성 주입
     private BoardServiceImpl boardService;
 
     @BeforeEach
@@ -65,10 +67,6 @@ class BoardServiceImplTest {
         verify(boardService, times(1)).getList();
     }
 
-//    BoardVO read(int boardId);
-//1
-//    int update(BoardDTO board);
-
     @DisplayName("게시글 가져오기")
     @Test
     void read() {
@@ -82,6 +80,7 @@ class BoardServiceImplTest {
         boardService.read(1);
 
         //then
+        // any() : 컴파일러가 타입을 자동으로 유추 (기본 자료형은 인식 못 함)
         verify(boardService, times(1)).read(1);
     }
 
@@ -100,28 +99,4 @@ class BoardServiceImplTest {
         //then
         verify(boardService, times(1)).update(any());
     }
-
-
-//
-//    @Transactional
-//    @DisplayName("게시글 작성")
-//    @Test
-//    public void create() {
-//        //given
-//        BoardDTO boardDTO = new BoardDTO();
-//        boardDTO.setTitle("테스트제목");
-//        boardDTO.setContent("테스트내용");
-//        boardDTO.setWriter("테스트작성자");
-//
-//
-//        //when
-//        int result = boardService.create(boardDTO);
-//        int boardDtoId = boardDTO.getBoardId();
-//        BoardVO boardVO = boardService.read(boardDtoId);
-//
-//        //then
-//        assertThat(result).isEqualTo(1);
-//        assertThat(boardDtoId).isEqualTo(boardVO.getBoardId());
-//
-//    }
 }
