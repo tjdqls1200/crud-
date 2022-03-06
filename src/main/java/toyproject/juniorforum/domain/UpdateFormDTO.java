@@ -1,17 +1,18 @@
 package toyproject.juniorforum.domain;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 
 @Data
-public class BoardSaveForm {
+@Builder
+public class UpdateFormDTO {
+    private int boardId;
+
     @NotEmpty
     private String title;
 
     @NotEmpty
     private String content;
-
 }

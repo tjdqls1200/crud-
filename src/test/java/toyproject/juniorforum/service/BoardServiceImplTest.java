@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import toyproject.juniorforum.domain.BoardDTO;
+import toyproject.juniorforum.domain.Criteria;
 import toyproject.juniorforum.mapper.BoardMapper;
 import static org.mockito.Mockito.*;
 
@@ -58,13 +59,13 @@ class BoardServiceImplTest {
         doAnswer(invocation -> {
             log.info("Spy BoardMapper getList!");
             return null;
-        }).when(boardMapper).getList();
+        }).when(boardMapper).getListWithPaging(new Criteria());
 
         //when
-        boardService.getList();
+        boardService.getList(new Criteria());
 
         //then
-        verify(boardService, times(1)).getList();
+        verify(boardService, times(1)).getList(new Criteria());
     }
 
     @DisplayName("게시글 가져오기")

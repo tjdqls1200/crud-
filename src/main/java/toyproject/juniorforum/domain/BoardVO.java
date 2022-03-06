@@ -1,13 +1,10 @@
 package toyproject.juniorforum.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
-import java.sql.Timestamp;
+import lombok.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
+@RequiredArgsConstructor
 public class BoardVO {
     private int boardId;
     private String title;
@@ -17,16 +14,23 @@ public class BoardVO {
     private LocalDateTime updateTime;
     private int hit;
 
-    public BoardDTO convertToDTO() {
-        BoardDTO boardDTO = new BoardDTO();
-        boardDTO.setBoardId(this.getBoardId());
-        boardDTO.setTitle(this.getTitle());
-        boardDTO.setWriter(this.getContent());
-        boardDTO.setContent(this.getContent());
-        boardDTO.setCreateTime(this.getCreateTime());
-        boardDTO.setUpdateTime(this.getUpdateTime());
-        return boardDTO;
+
+    public UpdateFormDTO convertToUpdateDTO() {
+        return UpdateFormDTO.builder()
+                .boardId(this.getBoardId())
+                .title(this.getTitle())
+                .content(this.getContent())
+                .build();
     }
 
-
+    public BoardDTO convertDTO() {
+        return BoardDTO.builder()
+                .boardId(this.getBoardId())
+                .title(this.getTitle())
+                .writer(this.getWriter())
+                .content(this.getContent())
+                .createTime(this.getCreateTime())
+                .updateTime(this.getUpdateTime())
+                .build();
+    }
 }

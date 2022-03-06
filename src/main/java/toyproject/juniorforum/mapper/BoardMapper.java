@@ -1,18 +1,18 @@
 package toyproject.juniorforum.mapper;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 import toyproject.juniorforum.domain.BoardDTO;
 import toyproject.juniorforum.domain.BoardVO;
+import toyproject.juniorforum.domain.Criteria;
+import toyproject.juniorforum.domain.UpdateFormDTO;
 
 import java.util.List;
 
 @Repository
 @Mapper
 public interface BoardMapper {
-    List<BoardVO> getList();
+    List<BoardVO> getListWithPaging(Criteria criteria);
 
     //Create
     int insert(BoardDTO board);
@@ -21,7 +21,8 @@ public interface BoardMapper {
     BoardVO read(int boardId);
 
     //Update
-    int update(BoardDTO board);
+    int update(UpdateFormDTO board);
+
 
     //Delete
     //int delete (Long boardId);

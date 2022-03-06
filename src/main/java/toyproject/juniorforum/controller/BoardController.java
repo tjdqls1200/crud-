@@ -8,13 +8,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import toyproject.juniorforum.domain.BoardDTO;
-import toyproject.juniorforum.domain.BoardVO;
-import toyproject.juniorforum.domain.BoardSaveForm;
+import toyproject.juniorforum.domain.*;
 import toyproject.juniorforum.service.BoardService;
 
-import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -25,8 +21,8 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/list")
-    public String list(Model model) {
-        List<BoardVO> boardList = boardService.getList();
+    public String list(Model model, @ModelAttribute("cri") Criteria criteria) {
+        List<BoardVO> boardList = boardService.getList(new Criteria());
         model.addAttribute("boardList", boardList);
         return "board/list";
     }
@@ -38,48 +34,48 @@ public class BoardController {
         return "board/read";
     }
 
-    @GetMapping("/{boardId}/update")
-    public String updateForm(@PathVariable int boardId, Model model) {
-        BoardVO boardVO = boardService.read(boardId);
-        BoardDTO board = boardVO.convertToDTO();
-        model.addAttribute("board", board);
-        return "board/update";
-    }
-
-    @PostMapping("/{boardId}/update")
-    public String update(@Validated @ModelAttribute("board") BoardDTO board, BindingResult bindingResult, @PathVariable Long boardId, Model model) {
-        if (bindingResult.hasErrors()) {
-            log.info("errors = {}", bindingResult);
-            return "board/update";
-        }
-        boardService.update(board);
-        model.addAttribute("boardList", boardService.getList());
-        return "board/list";
-    }
-
-
     @GetMapping
     public String createForm (Model model){
         log.info("createForm");
-        model.addAttribute("board", new BoardSaveForm());
+        model.addAttribute("board", new SaveFormDTO());
         return "board/create";
     }
 
     @PostMapping
-    public String create(@Validated @ModelAttribute("board") BoardSaveForm boardSaveForm, BindingResult
+    public String create(@Validated @ModelAttribute("board") SaveFormDTO boardSaveForm, BindingResult
             bindingResult, RedirectAttributes redirectAttributes) {
         log.info("create");
         if (bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
             return "board/create";
         }
-        BoardDTO boardDTO = new BoardDTO();
-        boardDTO.setTitle(boardSaveForm.getTitle());
-        boardDTO.setContent(boardSaveForm.getContent().
-                replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", ""));
+        BoardDTO boardDTO = BoardDTO.builder()
+                .title(boardSaveForm.getTitle())
+                .writer("이성빈")
+                .content(boardSaveForm.getContent()
+                        .replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", ""))
+                .build();
         boardService.create(boardDTO);
         redirectAttributes.addAttribute("boardId", boardDTO.getBoardId());
         redirectAttributes.addAttribute("status", true);
         return "redirect:/board/{boardId}";
     }
+
+    @GetMapping("/{boardId}/update")
+    public String updateForm(@PathVariable int boardId, Model model) {
+        model.addAttribute("board", boardService.read(boardId).convertToUpdateDTO());
+        return "board/update";
+    }
+
+    @PostMapping("/{boardId}/update")
+    public String update(@Validated @ModelAttribute("board") UpdateFormDTO board, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            log.info("errors = {}", bindingResult);
+            return "board/update";
+        }
+        boardService.update(board);
+        model.addAttribute("boardList", boardService.getList(new Criteria()));
+        return "board/list";
+    }
+
 }

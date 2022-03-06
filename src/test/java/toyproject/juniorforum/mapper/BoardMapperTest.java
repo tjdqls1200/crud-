@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import toyproject.juniorforum.domain.BoardDTO;
 import toyproject.juniorforum.domain.BoardVO;
+import toyproject.juniorforum.domain.Criteria;
+
 import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 
@@ -51,7 +53,7 @@ class BoardMapperTest {
                 .build();
 
         //when
-        int result = boardMapper.insert(boardDTO);
+        int result = boardMapper.insert(new BoardVO(boardDTO));
         // BoardVO boardVO = boardMapper.read(boardDTO.getBoardId());
 
         //then
@@ -72,10 +74,10 @@ class BoardMapperTest {
                 .build();
 
         //when
-        boardMapper.insert(board1);
+        boardMapper.insert(new BoardVO(board1));
 
         //then
-        List<BoardVO> list = boardMapper.getList();
+        List<BoardVO> list = boardMapper.getListWithPaging(new Criteria());
         BoardVO lastCreatedBoard = list.get(list.size() - 1);
         assertThat(lastCreatedBoard.getTitle()).isEqualTo("테스트제목1");
     }
@@ -89,7 +91,7 @@ class BoardMapperTest {
                 .content("테스트내용1")
                 .writer("테스트작가1")
                 .build();
-        boardMapper.insert(board1);
+        boardMapper.insert(new BoardVO(board1));
 
         //when
         board1.setTitle("테스트제목2");
