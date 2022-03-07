@@ -9,10 +9,11 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import toyproject.juniorforum.domain.BoardDTO;
 import toyproject.juniorforum.domain.Criteria;
+import toyproject.juniorforum.domain.DTO;
 import toyproject.juniorforum.mapper.BoardMapper;
 import static org.mockito.Mockito.*;
+import static toyproject.juniorforum.domain.DTO.*;
 
 @ExtendWith(MockitoExtension.class)
 @Slf4j
@@ -95,7 +96,7 @@ class BoardServiceImplTest {
         }).when(boardMapper).update(any());
 
         //when
-        boardService.update(new BoardDTO());
+        boardService.update(new BoardUpdateForm());
 
         //then
         verify(boardService, times(1)).update(any());

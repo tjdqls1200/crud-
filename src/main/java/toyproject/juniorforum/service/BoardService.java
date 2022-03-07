@@ -1,11 +1,10 @@
 package toyproject.juniorforum.service;
 
-import toyproject.juniorforum.domain.BoardDTO;
 import toyproject.juniorforum.domain.BoardVO;
 import toyproject.juniorforum.domain.Criteria;
-import toyproject.juniorforum.domain.UpdateFormDTO;
-
 import java.util.List;
+
+import static toyproject.juniorforum.domain.DTO.*;
 
 public interface BoardService {
     int create(BoardDTO board);
@@ -14,5 +13,5 @@ public interface BoardService {
 
     BoardVO read(int boardId);
 
-    int update(UpdateFormDTO board);
+    int update(BoardUpdateForm board);
 }

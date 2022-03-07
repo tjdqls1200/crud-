@@ -2,13 +2,13 @@ package toyproject.juniorforum.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import toyproject.juniorforum.domain.BoardDTO;
 import toyproject.juniorforum.domain.BoardVO;
 import toyproject.juniorforum.domain.Criteria;
-import toyproject.juniorforum.domain.UpdateFormDTO;
 import toyproject.juniorforum.mapper.BoardMapper;
 
 import java.util.List;
+
+import static toyproject.juniorforum.domain.DTO.*;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +32,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public int update(UpdateFormDTO board) {
+    public int update(BoardUpdateForm board) {
         return boardMapper.update(board);
     }
 }

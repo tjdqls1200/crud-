@@ -15,7 +15,7 @@
         LIMIT #{startNum}, #{amount}
     </select>
 
-    <insert id="insert" useGeneratedKeys="true" keyProperty="boardId" parameterType="BoardDTO">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="boardId" parameterType="toyproject.juniorforum.domain.DTO$BoardDTO">
         INSERT INTO tbl_board(title, content, writer, update_time)
         VALUES (#{title}, #{content}, #{writer}, now())
     </insert>
@@ -26,7 +26,7 @@
         WHERE board_id = #{boardId}
     </select>
 
-    <update id="update" parameterType="UpdateFormDTO">
+    <update id="update" parameterType="toyproject.juniorforum.domain.DTO$BoardUpdateForm">
         UPDATE tbl_board
         SET title = #{title},
             content = #{content},

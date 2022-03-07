@@ -7,12 +7,13 @@ import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import toyproject.juniorforum.domain.BoardDTO;
 import toyproject.juniorforum.domain.BoardVO;
 import toyproject.juniorforum.domain.Criteria;
+import toyproject.juniorforum.domain.DTO;
 
 import java.util.List;
 import static org.assertj.core.api.Assertions.*;
+import static toyproject.juniorforum.domain.DTO.*;
 
 /**
  * MybatisTest에 @Transactional, @ExtendWith 등의 메타 애노테이션이 등록되어 있음
@@ -53,7 +54,7 @@ class BoardMapperTest {
                 .build();
 
         //when
-        int result = boardMapper.insert(new BoardVO(boardDTO));
+        int result = boardMapper.insert(boardDTO);
         // BoardVO boardVO = boardMapper.read(boardDTO.getBoardId());
 
         //then
@@ -74,7 +75,7 @@ class BoardMapperTest {
                 .build();
 
         //when
-        boardMapper.insert(new BoardVO(board1));
+        boardMapper.insert(board1);
 
         //then
         List<BoardVO> list = boardMapper.getListWithPaging(new Criteria());
@@ -86,19 +87,22 @@ class BoardMapperTest {
     @Test
     void update() {
         //given
-        BoardDTO board1 = BoardDTO.builder()
+        BoardDTO boardDTO = BoardDTO.builder()
                 .title("테스트제목1")
                 .content("테스트내용1")
                 .writer("테스트작가1")
                 .build();
-        boardMapper.insert(new BoardVO(board1));
+        boardMapper.insert(boardDTO);
+        BoardUpdateForm boardUpdateForm = boardMapper.read(boardDTO.getBoardId()).convertToUpdateDTO();
 
         //when
-        board1.setTitle("테스트제목2");
-        boardMapper.update(board1);
+        boardUpdateForm.setTitle("테스트제목2");
+        boardUpdateForm.setContent("테스트내용2");
+        boardMapper.update(boardUpdateForm);
 
         //then
-        BoardVO boardVO = boardMapper.read(board1.getBoardId());
+        BoardVO boardVO = boardMapper.read(boardDTO.getBoardId());
         assertThat(boardVO.getTitle()).isEqualTo("테스트제목2");
+        assertThat(boardVO.getContent()).isEqualTo("테스트내용2");
     }
 }

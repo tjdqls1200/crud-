@@ -13,6 +13,8 @@ import toyproject.juniorforum.service.BoardService;
 
 import java.util.List;
 
+import static toyproject.juniorforum.domain.DTO.*;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -37,12 +39,12 @@ public class BoardController {
     @GetMapping
     public String createForm (Model model){
         log.info("createForm");
-        model.addAttribute("board", new SaveFormDTO());
+        model.addAttribute("board", new BoardSaveForm());
         return "board/create";
     }
 
     @PostMapping
-    public String create(@Validated @ModelAttribute("board") SaveFormDTO boardSaveForm, BindingResult
+    public String create(@Validated @ModelAttribute("board") BoardSaveForm boardSaveForm, BindingResult
             bindingResult, RedirectAttributes redirectAttributes) {
         log.info("create");
         if (bindingResult.hasErrors()) {
@@ -68,7 +70,7 @@ public class BoardController {
     }
 
     @PostMapping("/{boardId}/update")
-    public String update(@Validated @ModelAttribute("board") UpdateFormDTO board, BindingResult bindingResult, Model model) {
+    public String update(@Validated @ModelAttribute("board") BoardUpdateForm board, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             log.info("errors = {}", bindingResult);
             return "board/update";

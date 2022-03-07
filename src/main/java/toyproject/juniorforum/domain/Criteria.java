@@ -1,8 +1,6 @@
 package toyproject.juniorforum.domain;
 
-import lombok.Builder;
 import lombok.Data;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @Data
 public class Criteria {

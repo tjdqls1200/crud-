@@ -1,6 +1,9 @@
 package toyproject.juniorforum.domain;
 
 import lombok.*;
+import toyproject.juniorforum.domain.DTO.BoardDTO;
+import toyproject.juniorforum.domain.DTO.BoardUpdateForm;
+
 import java.time.LocalDateTime;
 
 @Data
@@ -15,8 +18,8 @@ public class BoardVO {
     private int hit;
 
 
-    public UpdateFormDTO convertToUpdateDTO() {
-        return UpdateFormDTO.builder()
+    public BoardUpdateForm convertToUpdateDTO() {
+        return BoardUpdateForm.builder()
                 .boardId(this.getBoardId())
                 .title(this.getTitle())
                 .content(this.getContent())
