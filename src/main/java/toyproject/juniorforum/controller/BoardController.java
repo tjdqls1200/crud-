@@ -2,6 +2,7 @@ package toyproject.juniorforum.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,8 +13,11 @@ import toyproject.juniorforum.domain.*;
 import toyproject.juniorforum.service.BoardService;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 import static toyproject.juniorforum.domain.DTO.*;
+import static toyproject.juniorforum.domain.Paging.*;
 
 @Slf4j
 @Controller
@@ -23,18 +27,19 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/list")
-    public String list(Model model, @ModelAttribute("cri") Criteria criteria) {
-        List<BoardVO> boardList = boardService.getList(new Criteria());
+    public String list(Model model, Criteria criteria, @RequestParam(required = false) Integer pageNum) {
+        if (pageNum != null) {
+            criteria.setPageNum((int) pageNum);
+        }
+        int totalCount = boardService.getTotal(criteria);
+        List<BoardVO> boardList = boardService.getList(criteria);
+        PageDTO pageDTO = new PageDTO(5, totalCount, criteria);
         model.addAttribute("boardList", boardList);
+        model.addAttribute("pageDTO", pageDTO);
         return "board/list";
     }
 
-    @GetMapping("/{boardId}")
-    public String read(@PathVariable int boardId, Model model) {
-        BoardVO board = boardService.read(boardId);
-        model.addAttribute("board", board);
-        return "board/read";
-    }
+
 
     @GetMapping
     public String createForm (Model model){
@@ -61,6 +66,13 @@ public class BoardController {
         redirectAttributes.addAttribute("boardId", boardDTO.getBoardId());
         redirectAttributes.addAttribute("status", true);
         return "redirect:/board/{boardId}";
+    }
+
+    @GetMapping("/{boardId}")
+    public String read(@PathVariable int boardId, Model model) {
+        BoardVO board = boardService.read(boardId);
+        model.addAttribute("board", board);
+        return "board/read";
     }
 
     @GetMapping("/{boardId}/update")

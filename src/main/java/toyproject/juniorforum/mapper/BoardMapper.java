@@ -3,9 +3,10 @@ package toyproject.juniorforum.mapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import toyproject.juniorforum.domain.BoardVO;
-import toyproject.juniorforum.domain.Criteria;
+
 import java.util.List;
 import static toyproject.juniorforum.domain.DTO.*;
+import static toyproject.juniorforum.domain.Paging.*;
 
 @Repository
 @Mapper
@@ -20,6 +21,8 @@ public interface BoardMapper {
 
     //Update
     int update(BoardUpdateForm board);
+
+    int getTotalCount(Criteria criteria);
 
 
     //Delete

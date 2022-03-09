@@ -4,6 +4,10 @@
 <mapper namespace="toyproject.juniorforum.mapper.BoardMapper">
     <resultMap id="boardMap" type="BoardVO">
         <id column="board_id" property="boardId"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="writer" property="writer"/>
+        <result column="hit" property="hit"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
     </resultMap>
@@ -33,4 +37,9 @@
             update_time = now()
         WHERE board_id = #{boardId}
     </update>
+
+    <select id="getTotalCount" resultType="int">
+        SELECT count(*) AS totalCount
+        FROM tbl_board
+    </select>
 </mapper>

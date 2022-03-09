@@ -9,11 +9,10 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import toyproject.juniorforum.domain.Criteria;
-import toyproject.juniorforum.domain.DTO;
 import toyproject.juniorforum.mapper.BoardMapper;
 import static org.mockito.Mockito.*;
 import static toyproject.juniorforum.domain.DTO.*;
+import static toyproject.juniorforum.domain.Paging.*;
 
 @ExtendWith(MockitoExtension.class)
 @Slf4j

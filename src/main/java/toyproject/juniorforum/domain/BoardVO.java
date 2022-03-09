@@ -7,7 +7,6 @@ import toyproject.juniorforum.domain.DTO.BoardUpdateForm;
 import java.time.LocalDateTime;
 
 @Data
-@RequiredArgsConstructor
 public class BoardVO {
     private int boardId;
     private String title;

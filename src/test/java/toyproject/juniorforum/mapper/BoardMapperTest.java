@@ -8,12 +8,11 @@ import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import toyproject.juniorforum.domain.BoardVO;
-import toyproject.juniorforum.domain.Criteria;
-import toyproject.juniorforum.domain.DTO;
 
 import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 import static toyproject.juniorforum.domain.DTO.*;
+import static toyproject.juniorforum.domain.Paging.*;
 
 /**
  * MybatisTest에 @Transactional, @ExtendWith 등의 메타 애노테이션이 등록되어 있음
