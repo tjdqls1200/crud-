@@ -31,52 +31,54 @@
                         <tr scope="row" th:each="board : ${boardList}" th:object="${board}">
                             <td th:text="*{boardId}">번호</td>
                             <td>
-                                <a href="#" th:href="@{/board/{boardId}(boardId=*{boardId})}" th:text="*{title}">제목</a>
+                                <a id="goRead" href="#" th:href="*{boardId}" th:text="*{title}">제목</a>
                             </td>
                             <td th:text="*{writer}">작성자</td>
                             <td th:text="${#temporals.format(board.createTime, 'yy-MM-dd HH:mm')}">작성일</td>
                             <td th:text="${#temporals.format(board.updateTime, 'yy-MM-dd HH:mm')}">수정일</td>
                             <td th:text="*{hit}">조회수</td>
+
+                            </form>
                         </tr>
                         </tbody>
                     </table>
-                    <div>
-                        <ui class="pagination justify-content-center" th:object="${pageDTO}">
+                    <div th:object="${pageDTO}">
+                        <ui class="pagination justify-content-center">
                             <li th:class="page-item" th:if="*{prev}">
-                                <a th:class="page-link" th:href="@{/board/list(pageNum = *{startPage - 1})}">&lt;이전</a>
+                                <a th:class="page-link" th:classappend="changePage" th:href="*{startPage - 1}">&lt;이전</a>
                             </li>
                             <li th:class="page-item" th:classappend="${pageDTO.criteria.pageNum == page} ? active"
                                 th:each="page : ${#numbers.sequence(pageDTO.startPage, pageDTO.endPage)}">
-                                <a th:class="page-link" th:href="@{/board/list(pageNum = ${page})}" th:text="${page}"></a>
+                                <a th:class="page-link" th:classappend="changePage" th:href="${page}" th:text="${page}"></a>
                             </li>
-                            <li th:class="page-item" th:classappend="${!pageDTO.next} ? disabled">
-                                <a th:class="page-link" th:if="*{next}" th:href="@{/board/list(pageNum = *{endPage + 1})}">다음&gt;</a>
+                            <li th:class="page-item"  th:classappend="${!pageDTO.next} ? disabled">
+                                <a th:class="page-link" th:classappend="changePage" th:if="*{next}" th:href="*{endPage + 1}">다음&gt;
+                                </a>
                             </li>
                         </ui>
+                        <form action="/board/list" th:object="${criteria}" name="pageForm">
+                            <input type="hidden" name="pageNum" th:field="*{pageNum}">
+                            <input type="hidden" name="amount" th:field="*{amount}">
+                        </form>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-4">
-                        <button class="w-100 btn btn-primary btn-lg"
-                                onclick="location.href='items.html'"
-                                th:onclick="|location.href='@{/board}'|"
-                                type="button" th:text="#{button.write}">글쓰기
-                        </button>
-                    </div>
-                </div>
-                <!-- Search Bar -->
-                <form class="d-none d-sm-inline-block form-inline mr-auto mr-md-3 my-2 my-md-0 mw-100 navbar-search float-md-right">
-                    <div class="input-group">
-                        <label for="search"></label>
-                        <input type="text" id="search" class="form-control bg-light border-0 small" placeholder="Search for..."
-                               aria-label="Search" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="button">
-                                <i class="fas fa-search fa-sm"></i>
-                            </button>
+                    <div class="d-inline row">
+                        <div class="col-12">
+                            <!-- Search Bar -->
+                            <form class="seachBar d-none d-sm-inline-block form-inline mr-auto mr-md-3 my-2 my-md-0 mw-100 navbar-search float-md-right">
+                                <div class="input-group">
+                                    <label for="search"></label>
+                                    <input type="text" id="search" class="form-control bg-light border-0 small" placeholder="Search for..."
+                                           aria-label="Search" aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button">
+                                            <i class="fas fa-search fa-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
 
@@ -84,6 +86,26 @@
         <div th:replace="~{/fragment/layout/footer :: common_footer}"> </div>
     </div>
 </div>
+<script th:inline="javascript">
+    let pageForm = $(document.pageForm);
+    let paging = [[${pageDTO.criteria.listLink}]];
+
+    $(document).ready(function () {
+        // alert("게시글이 등록되었습니다.")
+    });
+
+    $("a.changePage").click(function(e){
+        e.preventDefault();
+        // pageForm에 input 태그 pageNum을 찾고, href 값을 넣어줌
+        pageForm.find("input[name='pageNum']").val($(this).attr("href"));
+        pageForm.submit();
+    });
+
+    $("a#goRead").on("click", function (e) {
+        e.preventDefault();
+        location.href = "/board/read" + paging + "&boardId=" + $(this).attr("href");
+    });
+</script>
 <th:block th:replace="~{fragment/layout/config :: common_script}"></th:block>
 </body>
 

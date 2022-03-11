@@ -37,10 +37,8 @@
                     type="button" th:text="#{button.edit}">수정
             </button>
         </div>
-            <button class="w-100 btn btn-secondary btn-lg" onclick="location.href='#'"
-                    th:onclick="|location.href='@{/board/list}'|"
-                    type="button" th:text="#{button.list}">목록으로
-
+            <button class="w-100 btn btn-secondary btn-lg" id="goList" onclick="location.href='#'"
+                    th:onclick="|location.href='@{/board/list}'|" type="button" th:text="#{button.list}">목록으로
             </button>
         <div>
 
@@ -49,6 +47,14 @@
         <div th:replace="~{/fragment/layout/footer :: common_footer}"> </div>
     </div>
 </div>
+<script th:inline="javascript">
+    let paging = [[${criteria.listLink}]];
+
+    $("button#goList").click(function (e){
+        e.preventDefault();
+        location.href = "/board/list" + paging;
+    });
+</script>
 <th:block th:replace="~{fragment/layout/config :: common_script}"></th:block>
 </body>
 

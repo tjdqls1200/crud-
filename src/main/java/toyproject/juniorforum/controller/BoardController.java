@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toyproject.juniorforum.domain.*;
 import toyproject.juniorforum.service.BoardService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -27,15 +28,14 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/list")
-    public String list(Model model, Criteria criteria, @RequestParam(required = false) Integer pageNum) {
-        if (pageNum != null) {
-            criteria.setPageNum((int) pageNum);
-        }
-        int totalCount = boardService.getTotal(criteria);
-        List<BoardVO> boardList = boardService.getList(criteria);
-        PageDTO pageDTO = new PageDTO(5, totalCount, criteria);
-        model.addAttribute("boardList", boardList);
-        model.addAttribute("pageDTO", pageDTO);
+    public String list(Criteria criteria, Model model) {
+//        if (pageNum != null) {
+//            criteria.setPageNum((int) pageNum);
+//        }
+        log.info("criteria.pageNum = {}", criteria.getPageNum());
+        model.addAttribute("boardList", boardService.getList(criteria));
+        model.addAttribute("pageDTO", new PageDTO(5, boardService.getTotal(criteria), criteria));
+        log.info("list controller");
         return "board/list";
     }
 
@@ -43,8 +43,8 @@ public class BoardController {
 
     @GetMapping
     public String createForm (Model model){
-        log.info("createForm");
         model.addAttribute("board", new BoardSaveForm());
+        log.info("createForm controller");
         return "board/create";
     }
 
@@ -65,19 +65,23 @@ public class BoardController {
         boardService.create(boardDTO);
         redirectAttributes.addAttribute("boardId", boardDTO.getBoardId());
         redirectAttributes.addAttribute("status", true);
-        return "redirect:/board/{boardId}";
+        log.info("create controller");
+        return "redirect:/board/list";
     }
 
-    @GetMapping("/{boardId}")
-    public String read(@PathVariable int boardId, Model model) {
-        BoardVO board = boardService.read(boardId);
-        model.addAttribute("board", board);
+    @GetMapping({"/read", "/update"})
+    public String read(Criteria criteria, int boardId, Model model, HttpServletRequest request) {
+        log.info("read controller");
+
+        model.addAttribute("board", boardService.read(boardId));
+        model.addAttribute("criteria", criteria);
         return "board/read";
     }
 
     @GetMapping("/{boardId}/update")
     public String updateForm(@PathVariable int boardId, Model model) {
         model.addAttribute("board", boardService.read(boardId).convertToUpdateDTO());
+        log.info("updateForm controller");
         return "board/update";
     }
 
@@ -89,6 +93,7 @@ public class BoardController {
         }
         boardService.update(board);
         model.addAttribute("boardList", boardService.getList(new Criteria()));
+        log.info("update controller");
         return "board/list";
     }
 

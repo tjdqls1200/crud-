@@ -15,7 +15,7 @@
     <select id="getListWithPaging" resultMap="boardMap">
         SELECT *
         FROM tbl_board
-        ORDER BY board_id
+        ORDER BY board_id DESC
         LIMIT #{startNum}, #{amount}
     </select>
 

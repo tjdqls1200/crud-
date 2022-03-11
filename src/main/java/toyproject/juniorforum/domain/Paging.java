@@ -62,12 +62,12 @@ public class Paging {
             this.startNum = (this.pageNum - 1) * this.amount;
         }
 
-//        public String getListLink() {
-//            return UriComponentsBuilder.fromPath("")
-//                    .queryParam("pageNum", this.pageNum)
-//                    .queryParam("amount", this.amount)
-//                    .toUriString();
-//        }
+        public String getListLink() {
+            return UriComponentsBuilder.fromPath("")
+                    .queryParam("pageNum", this.pageNum)
+                    .queryParam("amount", this.amount)
+                    .toUriString();
+        }
 //
 //            // 아직 이해 안
 //        public String[] getTypeArr() {
