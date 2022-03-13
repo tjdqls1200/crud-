@@ -1,10 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/fragment/layout/head :: common_head}">
 </head>
-<body>
+<body id="page-top">
+    <div id="wrapper">
+        <th:block th:replace="~{/fragment/layout/sidebar :: common_side('board')}"></th:block>
+        <div id="content-wrapper" class="d-flex flex-column col-md-8">
+            <div id="content" th:object="${board}" >
+                <!--/* header */-->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow"></nav>
+                <!-- Page Content -->
+                <form class="container-fluid" th:action th:object="${board}" method="post" name="updateForm">
+                    <div th:if="${#fields.hasGlobalErrors()}">
+                        <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
+                    </div>
+                    <!--/* input : 제목, 내용 */-->
+                    <div>
+                        <label for="title" th:text="#{label.board.title}">제목</label>
+                        <input type="text" id="title" th:field="*{title}"
+                               th:errorclass="field-error" class="form-control">
+                        <div class="field-error" th:errors="*{title}">제목 오류</div>
+                    </div>
+                    <div>
+                        <label for="summernote" th:text="#{label.board.content}">내용</label>
+                        <textarea id="summernote" th:field="*{content}"
+                                  th:errorclass="field-error" class="form-control">
+                        </textarea>
+                        <div class="field-error" th:errors="*{content}">내용 오류</div>
+                    </div>
+                    <div class="row" style="margin-top: 20px">
+                        <div class="col">
+                            <button class="w-25 btn btn-primary btn-lg" onclick="location.href='#'" id="updateSave"
+                                    th:onclick="|location.href='@{/board/list}'|"
+                                    type="submit" th:text="#{button.save}">저장
+                            </button>
+                            <button class="w-25 btn btn-secondary btn-lg" id="goList" onclick="location.href='#'"
+                                    th:onclick="|location.href='@{/board/list}'|" type="button" th:text="#{button.list}">목록으로
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div th:replace="~{/fragment/layout/footer :: common_footer}"> </div>
+    </div>
+    <script>
+        $('#summernote').summernote({
+            tabsize: 2,
+            height: 300
+        });
+    </script>
+    <script th:inline="javascript">
+        let updateForm = $(document.updateForm);
+        let paging = [[${criteria.listLink}]];
 
+        $("button#updateSave").click(function (e) {
+            e.preventDefault();
+            updateForm.find("action").val($(this).attr("/board/update" + paging));
+            updateForm.submit();
+        })
+    </script>
+    <th:block th:replace="~{fragment/layout/config :: common_script}"></th:block>
 </body>
+
 </html>
