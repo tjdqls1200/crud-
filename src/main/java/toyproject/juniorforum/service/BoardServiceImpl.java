@@ -28,6 +28,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardVO read(int boardId) {
+        boardMapper.addHit(boardId);
         return boardMapper.read(boardId);
     }
 

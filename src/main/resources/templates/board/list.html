@@ -31,7 +31,7 @@
                         <tr scope="row" th:each="board : ${boardList}" th:object="${board}">
                             <td th:text="*{boardId}">번호</td>
                             <td>
-                                <a id="goRead" href="#" th:href="*{boardId}" th:text="*{title}">제목</a>
+                                <a href="#" th:href="@{/board/read(boardId=${board.boardId})}" th:text="*{title}">제목</a>
                             </td>
                             <td th:text="*{writer}">작성자</td>
                             <td th:text="${#temporals.format(board.createTime, 'yy-MM-dd HH:mm')}">작성일</td>
@@ -96,14 +96,9 @@
 
     $("a.changePage").click(function(e){
         e.preventDefault();
-        // pageForm에 input 태그 pageNum을 찾고, href 값을 넣어줌
+        <!-- /* pageForm에 input 태그 pageNum을 찾고, href 값을 넣어줌 */ -->
         pageForm.find("input[name='pageNum']").val($(this).attr("href"));
         pageForm.submit();
-    });
-
-    $("a#goRead").on("click", function (e) {
-        e.preventDefault();
-        location.href = "/board/read" + paging + "&boardId=" + $(this).attr("href");
     });
 </script>
 <th:block th:replace="~{fragment/layout/config :: common_script}"></th:block>

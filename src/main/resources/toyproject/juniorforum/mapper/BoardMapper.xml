@@ -24,6 +24,12 @@
         VALUES (#{title}, #{content}, #{writer}, now())
     </insert>
 
+    <update id="addHit" parameterType="int">
+        UPDATE tbl_board
+        SET hit = hit + 1
+        WHERE board_id = #{boardId}
+    </update>
+
     <select id="read" resultMap="boardMap">
         SELECT *
         FROM tbl_board

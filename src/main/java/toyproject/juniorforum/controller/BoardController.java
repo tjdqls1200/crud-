@@ -2,7 +2,6 @@ package toyproject.juniorforum.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,9 +12,6 @@ import toyproject.juniorforum.domain.*;
 import toyproject.juniorforum.service.BoardService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
 
 import static toyproject.juniorforum.domain.DTO.*;
 import static toyproject.juniorforum.domain.Paging.*;
@@ -29,13 +25,9 @@ public class BoardController {
 
     @GetMapping("/list")
     public String list(Criteria criteria, Model model) {
-//        if (pageNum != null) {
-//            criteria.setPageNum((int) pageNum);
-//        }
-        log.info("criteria.pageNum = {}", criteria.getPageNum());
         model.addAttribute("boardList", boardService.getList(criteria));
         model.addAttribute("pageDTO", new PageDTO(5, boardService.getTotal(criteria), criteria));
-        log.info("list controller");
+        log.info("--- list ---");
         return "board/list";
     }
 
@@ -44,14 +36,13 @@ public class BoardController {
     @GetMapping
     public String createForm (Model model){
         model.addAttribute("board", new BoardSaveForm());
-        log.info("createForm controller");
+        log.info("--- createForm ---");
         return "board/create";
     }
 
     @PostMapping
     public String create(@Validated @ModelAttribute("board") BoardSaveForm boardSaveForm, BindingResult
             bindingResult, RedirectAttributes redirectAttributes) {
-        log.info("create");
         if (bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
             return "board/create";
@@ -65,23 +56,23 @@ public class BoardController {
         boardService.create(boardDTO);
         redirectAttributes.addAttribute("boardId", boardDTO.getBoardId());
         redirectAttributes.addAttribute("status", true);
-        log.info("create controller");
+        log.info("--- create ---");
         return "redirect:/board/read";
     }
 
     @GetMapping({"/read", "/update"})
     public String read(Criteria criteria, int boardId, Model model, HttpServletRequest request) {
-        log.info("read controller");
-        model.addAttribute("criteria", criteria);
-        String requestMapping = request.getRequestURI().substring(7);
         BoardVO boardVO = boardService.read(boardId);
-        if (requestMapping.equals("update")) {
+        model.addAttribute("criteria", criteria);
+        if (request.getRequestURI().substring(7).equals("update")) {
             BoardUpdateForm boardUpdateForm = boardVO.convertToUpdateDTO();
             log.info("boardId = {}", boardUpdateForm.getBoardId());
             model.addAttribute("board", boardUpdateForm);
+            log.info("--- updateForm ---");
             return "board/update";
         }
         model.addAttribute("board", boardVO);
+        log.info("--- read ---");
         return "board/read";
     }
 
@@ -93,6 +84,7 @@ public class BoardController {
             return "board/update";
         }
         boardService.update(board);
+        log.info("--- update ---");
         return "redirect:/board/list" + criteria.getListLink();
     }
 
