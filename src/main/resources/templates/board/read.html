@@ -36,6 +36,10 @@
                             th:onclick="${board.boardId}"
                             type="button" th:text="#{button.edit}">수정
                     </button>
+                    <button class="w-25 btn btn-primary btn-lg" id="goDelete" onclick="location.href='#'"
+                            th:onclick="${board.boardId}"
+                            type="button" th:text="#{button.delete}">삭제
+                    </button>
                     <button class="w-25 btn btn-secondary btn-lg" id="goList" onclick="location.href='#'"
                             type="button" th:text="#{button.list}">목록으로
                     </button>
@@ -52,6 +56,10 @@
     $("button#goUpdate").click(function (e){
         e.preventDefault();
         location.href = "/board/update" + paging + "&boardId=" + $(this).attr("onclick");
+    })
+    $("button#goDelete").click(function (e){
+        e.preventDefault();
+        location.href = "/board/delete" + "?boardId=" + $(this).attr("onclick");
     })
     $("button#goList").click(function (e){
         e.preventDefault();

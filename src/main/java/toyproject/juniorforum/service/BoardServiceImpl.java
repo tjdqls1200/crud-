@@ -42,4 +42,9 @@ public class BoardServiceImpl implements BoardService {
     public int getTotal(Criteria criteria) {
         return boardMapper.getTotalCount(criteria);
     }
+
+    @Override
+    public void delete(int boardId) {
+        boardMapper.delete(boardId);
+    }
 }

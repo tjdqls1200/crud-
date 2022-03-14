@@ -48,4 +48,10 @@
         SELECT count(*) AS totalCount
         FROM tbl_board
     </select>
+
+    <delete id="delete" parameterType="int">
+        DELETE
+        FROM tbl_board
+        WHERE board_id = #{boardId}
+    </delete>
 </mapper>

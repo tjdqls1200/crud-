@@ -17,4 +17,6 @@ public interface BoardService {
     int update(BoardUpdateForm board);
 
     int getTotal(Criteria criteria);
+
+    void delete(int boardId);
 }

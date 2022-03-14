@@ -32,9 +32,8 @@ public class BoardController {
     }
 
 
-
     @GetMapping
-    public String createForm (Model model){
+    public String createForm(Model model) {
         model.addAttribute("board", new BoardSaveForm());
         log.info("--- createForm ---");
         return "board/create";
@@ -88,4 +87,12 @@ public class BoardController {
         return "redirect:/board/list" + criteria.getListLink();
     }
 
+    @GetMapping("/delete")
+    public String delete(Criteria criteria, int boardId, Model model) {
+        boardService.delete(boardId);
+        model.addAttribute("boardList", boardService.getList(criteria));
+        model.addAttribute("pageDTO", new PageDTO(5, boardService.getTotal(criteria), criteria));
+        log.info("--- delete ---");
+        return "board/list";
+    }
 }

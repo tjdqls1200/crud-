@@ -25,8 +25,6 @@ public interface BoardMapper {
     int getTotalCount(Criteria criteria);
 
     void addHit(int boardId);
-
-
     //Delete
-    //int delete (Long boardId);
+    void delete (int boardId);
 }
