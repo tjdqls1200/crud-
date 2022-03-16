@@ -40,8 +40,8 @@ public class Paging {
         private int pageNum;
         private int amount;
         private int startNum;
-//        private String keyword;
-//        private String category;
+        private String type;
+        private String keyword;
 
         public Criteria() {
             this(1, 10);
@@ -68,11 +68,9 @@ public class Paging {
                     .queryParam("amount", this.amount)
                     .toUriString();
         }
-//
-//            // 아직 이해 안
-//        public String[] getTypeArr() {
-//            return keyword == null ? new String[]{} : keyword.split("");
-//        }
-//    }
+
+        public String[] getTypeArr() {
+            return type == null ? new String[]{} : type.split("");
+        }
     }
 }

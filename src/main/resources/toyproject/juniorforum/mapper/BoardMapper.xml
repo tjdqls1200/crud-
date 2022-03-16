@@ -12,9 +12,34 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
+    <sql id="criteria">
+        <where>
+            <if test="type != null and keyword != null">
+                <trim prefix="(" suffix=")" prefixOverrides="OR">
+                    <foreach item="type" collection="typeArr">
+                        <trim prefix="OR">
+                            <choose>
+                                <when test="type == 'T'.toString()">
+                                    title LIKE CONCAT('%', #{keyword}, '%')
+                                </when>
+                                <when test="type == 'W'.toString()">
+                                    writer LIKE CONCAT('%', #{keyword}, '%')
+                                </when>
+                                <when test="type == 'C'.toString()">
+                                    content LIKE CONCAT('%', #{keyword}, '%')
+                                </when>
+                            </choose>
+                        </trim>
+                    </foreach>
+                </trim>
+            </if>
+        </where>
+    </sql>
+    
     <select id="getListWithPaging" resultMap="boardMap">
         SELECT *
         FROM tbl_board
+        <include refid="criteria"></include>
         ORDER BY board_id DESC
         LIMIT #{startNum}, #{amount}
     </select>
@@ -47,6 +72,7 @@
     <select id="getTotalCount" resultType="int">
         SELECT count(*) AS totalCount
         FROM tbl_board
+        <include refid="criteria"></include>
     </select>
 
     <delete id="delete" parameterType="int">

@@ -82,6 +82,23 @@ class BoardMapperTest {
         assertThat(lastCreatedBoard.getTitle()).isEqualTo("테스트제목1");
     }
 
+    @DisplayName("게시글 검색 목록")
+    @Test
+    void listWithKeyword() {
+        Criteria criteria = new Criteria();
+        criteria.setType("WT");
+        criteria.getTypeArr();
+        criteria.setKeyword("이성빈");
+        assertThat(criteria.getType().indexOf("W")).isEqualTo(0);
+        assertThat(criteria.getType().indexOf("T")).isEqualTo(1);
+        List<BoardVO> list = boardMapper.getListWithPaging(criteria);
+        for (int i =0; i < list.size(); i++) {
+            BoardVO boardVO = list.get(i);
+            log.info("writer = {}", boardVO.getWriter());
+            assertThat(boardVO.getWriter()).isEqualTo("이성빈");
+        }
+    }
+
     @DisplayName("게시글 업데이트")
     @Test
     void update() {
