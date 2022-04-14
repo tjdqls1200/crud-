@@ -7,12 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import toyproject.juniorforum.domain.BoardVO;
 
 import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 import static toyproject.juniorforum.domain.DTO.*;
 import static toyproject.juniorforum.domain.Paging.*;
+import static toyproject.juniorforum.domain.VO.*;
 
 /**
  * MybatisTest에 @Transactional, @ExtendWith 등의 메타 애노테이션이 등록되어 있음
@@ -72,14 +72,14 @@ class BoardMapperTest {
                 .content("테스트내용1")
                 .writer("테스트작가1")
                 .build();
-
-        //when
         boardMapper.insert(board1);
 
-        //then
+        //when
         List<BoardVO> list = boardMapper.getListWithPaging(new Criteria());
-        BoardVO lastCreatedBoard = list.get(list.size() - 1);
-        assertThat(lastCreatedBoard.getTitle()).isEqualTo("테스트제목1");
+
+        //then
+        assertThat(list.size()).isEqualTo(10);
+        assertThat(list.get(0).getTitle()).isEqualTo("테스트제목1");
     }
 
     @DisplayName("게시글 검색 목록")

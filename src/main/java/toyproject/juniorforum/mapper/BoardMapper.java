@@ -2,11 +2,10 @@ package toyproject.juniorforum.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
-import toyproject.juniorforum.domain.BoardVO;
-
 import java.util.List;
 import static toyproject.juniorforum.domain.DTO.*;
 import static toyproject.juniorforum.domain.Paging.*;
+import static toyproject.juniorforum.domain.VO.*;
 
 @Repository
 @Mapper
@@ -26,5 +25,5 @@ public interface BoardMapper {
 
     void addHit(int boardId);
     //Delete
-    void delete (int boardId);
+    int delete (int boardId);
 }

@@ -28,10 +28,10 @@
             </div>
             <div>
                 <label for="contents" th:text="#{label.board.content}">contents</label>
-                <textarea type="text" id="contents" class="form-control" th:field="*{content}" readonly></textarea>
+                <textarea type="text" id="contents" rows="10" class="form-control" th:field="*{content}" readonly></textarea>
             </div>
             <div class="row" style="margin-top: 20px">
-                <div class="col">
+                <div class="col text-center">
                     <button class="w-25 btn btn-primary btn-lg" id="goUpdate" onclick="location.href='#'"
                             th:onclick="${board.boardId}"
                             type="button" th:text="#{button.edit}">수정
@@ -44,12 +44,68 @@
                             type="button" th:text="#{button.list}">목록으로
                     </button>
                 </div>
-            </div>
+            </div>&nbsp;
+            <!--/* reply */-->
+            <section class="mb-5">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <div class="d-flex mb-4">
+                            <div class="reply-list"></div>
+                        </div>
+                        <form class="mb-4">
+                            <div class="form-inline mb-2">
+                                <input type="hidden" id="reply-board-id" value="${board.boardId}">
+                                <label for="reply-writer">작성자</label>
+                                <input type="text" class="form-control ml-2" id="reply-writer">
+                            </div>
+                            <textarea class="form-control" rows="3" placeholder="내용을 입력하세요.." id="reply-content"></textarea>
+                            <button type="button" class="btn btn-dark mt-3 float-md-right" id="reply-create">등록</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
         </div>
         <!--/* Footer */-->
         <div th:replace="~{/fragment/layout/footer :: common_footer}"> </div>
     </div>
 </div>
+<script th:inline="javascript">
+    $(function () {
+        printReplyList();
+    });
+    function printReplyList() {
+        let boardId = [[${board.boardId}]];
+        let url = "/replies/" + boardId;
+        $.get(url, function (response) {
+            let replies = "";
+
+            for (var i in response) {
+                replies += `
+                    <div class="d-flex mb-4">
+                        <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                        <div class="ms-3">
+                            <div class="font-weight-bold">&nbsp; ${response[i].writer}</div>
+                            <div class="btn-sm">작성일: ${response[i].createTime}</div>
+                            <text>&nbsp;&nbsp;${response[i].content}</text>
+                        </div>
+                        <hr>
+                    </div>`;
+            }
+            $(".reply-list").html(replies);
+        }, "json");
+        $("button#comment-create-btn").click(function (e) {
+            $.post(url, {
+                writer: document.querySelector("#reply-writer").value,
+                content: document.querySelector("#reply-content").value,
+                boardId: document.querySelector("#reply-board-id").value
+            }, function (response) {
+                let message = (response.ok) ? "댓글이 등록되었습니다." : "댓글 등록이 실패했습니다.";
+                alert(message);
+                window.location.reload();
+            },"json");
+        });
+    }
+</script>
 <script th:inline="javascript">
     let paging = [[${criteria.listLink}]];
 
@@ -67,6 +123,7 @@
     });
 </script>
 <th:block th:replace="~{fragment/layout/config :: common_script}"></th:block>
+
 </body>
 
 </html>

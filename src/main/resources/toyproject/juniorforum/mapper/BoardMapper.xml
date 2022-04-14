@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="toyproject.juniorforum.mapper.BoardMapper">
-    <resultMap id="boardMap" type="BoardVO">
+    <resultMap id="boardMap" type="toyproject.juniorforum.domain.VO$BoardVO">
         <id column="board_id" property="boardId"/>
         <result column="title" property="title"/>
         <result column="content" property="content"/>
@@ -44,12 +44,12 @@
         LIMIT #{startNum}, #{amount}
     </select>
 
-    <insert id="insert" useGeneratedKeys="true" keyProperty="boardId" parameterType="toyproject.juniorforum.domain.DTO$BoardDTO">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="boardId">
         INSERT INTO tbl_board(title, content, writer, update_time)
         VALUES (#{title}, #{content}, #{writer}, now())
     </insert>
 
-    <update id="addHit" parameterType="int">
+    <update id="addHit">
         UPDATE tbl_board
         SET hit = hit + 1
         WHERE board_id = #{boardId}
@@ -61,7 +61,7 @@
         WHERE board_id = #{boardId}
     </select>
 
-    <update id="update" parameterType="toyproject.juniorforum.domain.DTO$BoardUpdateForm">
+    <update id="update">
         UPDATE tbl_board
         SET title = #{title},
             content = #{content},
@@ -75,7 +75,7 @@
         <include refid="criteria"></include>
     </select>
 
-    <delete id="delete" parameterType="int">
+    <delete id="delete">
         DELETE
         FROM tbl_board
         WHERE board_id = #{boardId}

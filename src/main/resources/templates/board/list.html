@@ -31,7 +31,7 @@
                         <tr scope="row" th:each="board : ${boardList}" th:object="${board}">
                             <td th:text="*{boardId}">번호</td>
                             <td>
-                                <a href="#" th:href="@{/board/read(boardId=${board.boardId})}" th:text="*{title}">제목</a>
+                                <a th:class="goRead" href="#" th:href="${board.boardId}" th:text="*{title}">제목</a>
                             </td>
                             <td th:text="*{writer}">작성자</td>
                             <td th:text="${#temporals.format(board.createTime, 'yy-MM-dd HH:mm')}">작성일</td>
@@ -56,11 +56,11 @@
                                 </a>
                             </li>
                         </ui>
-                        <form action="/board/list" th:object="${criteria}" name="pageForm">
+                        <form action="/board/list" th:action th:object="${criteria}" name="pageForm">
                             <input type="hidden" name="pageNum" th:field="*{pageNum}">
                             <input type="hidden" name="amount" th:field="*{amount}">
-                            <input type="hidden" name="type" th:field="*{type}">
-                            <input type="hidden" name="keyword" th:field="*{keyword}">
+                            <input type="hidden" name="type" th:field="*{type}" th:if="*{type}">
+                            <input type="hidden" name="keyword" th:field="*{keyword}" th:if="*{keyword}">
                         </form>
                     </div>
                     <div class="d-inline row">
@@ -97,34 +97,40 @@
 
         <!--/* Footer */-->
         <div th:replace="~{/fragment/layout/footer :: common_footer}"> </div>
+        </div>
     </div>
-</div>
-<script th:inline="javascript">
-    let pageForm = $(document.pageForm);
-    let searchForm = $(document.searchForm);
-    let paging = [[${pageDTO.criteria.listLink}]];
+    <script th:inline="javascript">
+        let pageForm = $(document.pageForm);
+        let searchForm = $(document.searchForm);
+        let paging = [[${pageDTO.criteria.listLink}]];
 
-    $(document).ready(function () {
-        // alert("게시글이 등록되었습니다.")
-    });
+        $(document).ready(function () {
+            // alert("게시글이 등록되었습니다.")
+        });
 
-    $("a.changePage").click(function(e){
-        e.preventDefault();
-        <!-- /* pageForm에 input 태그 pageNum을 찾고, href 값을 넣어줌 */ -->
-        pageForm.find("input[name='pageNum']").val($(this).attr("href"));
-        pageForm.submit();
-    });
+        $("a.goRead").click(function (e){
+            e.preventDefault();
+            location.href = "/board/read" + paging + "&boardId=" + $(this).attr("href");
+        });
 
-    $("button#searchBar").click(function (e){
-        e.preventDefault();
-        if (!searchForm.find("input#keyword").val()) {
-            alert("키워드를 입력하세요.");
-            return;
-        }
-        searchForm.submit();
-    });
-</script>
-<th:block th:replace="~{fragment/layout/config :: common_script}"></th:block>
+
+        $("a.changePage").click(function(e){
+            e.preventDefault();
+            <!-- /* pageForm에 input 태그 pageNum을 찾고, href 값을 넣어줌 */ -->
+            pageForm.find("input[name='pageNum']").val($(this).attr("href"));
+            pageForm.submit();
+        });
+
+        $("button#searchBar").click(function (e){
+            e.preventDefault();
+            if (!searchForm.find("input#keyword").val()) {
+                alert("키워드를 입력하세요.");
+                return;
+            }
+            searchForm.submit();
+        });
+    </script>
+    <th:block th:replace="~{fragment/layout/config :: common_script}"></th:block>
 </body>
 
 </html>

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class DTO {
@@ -45,6 +46,16 @@ public class DTO {
         @NotEmpty
         private String title;
 
+        @NotEmpty
+        private String content;
+    }
+
+    @Data
+    public static class ReplyDTO {
+        private int replyId;
+        private int boardId;
+
+        private String writer;
         @NotEmpty
         private String content;
     }

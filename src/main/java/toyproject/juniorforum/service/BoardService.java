@@ -1,11 +1,11 @@
 package toyproject.juniorforum.service;
 
-import toyproject.juniorforum.domain.BoardVO;
 
 import java.util.List;
 
 import static toyproject.juniorforum.domain.DTO.*;
 import static toyproject.juniorforum.domain.Paging.*;
+import static toyproject.juniorforum.domain.VO.*;
 
 public interface BoardService {
     int create(BoardDTO board);
@@ -18,5 +18,5 @@ public interface BoardService {
 
     int getTotal(Criteria criteria);
 
-    void delete(int boardId);
+    int delete(int boardId);
 }

@@ -26,6 +26,11 @@ public class Paging {
 
             totalEndPage = (int) (Math.ceil((double) totalCount / criteria.amount));
 
+            // 검색 시 리스트가 없으면 endPage가 0기 되기 때문에 1 ++
+            if (totalEndPage == 0) {
+                totalEndPage++;
+            }
+
             if (totalEndPage < endPage) {
                 endPage = totalEndPage;
             }
@@ -66,9 +71,12 @@ public class Paging {
             return UriComponentsBuilder.fromPath("")
                     .queryParam("pageNum", this.pageNum)
                     .queryParam("amount", this.amount)
+                    .queryParam("type", this.type)
+                    .queryParam("keyword", this.keyword)
                     .toUriString();
         }
 
+        // Mybatis 동적 쿼리 foreach문 typeArr 조회
         public String[] getTypeArr() {
             return type == null ? new String[]{} : type.split("");
         }

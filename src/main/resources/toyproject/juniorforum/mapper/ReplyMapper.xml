@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="toyproject.juniorforum.mapper.ReplyMapper">
+    <resultMap id="replyMap" type="toyproject.juniorforum.domain.VO$ReplyVO">
+        <id property="boardId" column="board_id"/>
+        <id property="replyId" column="reply_id"/>
+        <id property="createTime" column="create_time"/>
+        <id property="updateTime" column="update_time"/>
+    </resultMap>
+    <insert id="createReply" useGeneratedKeys="true" keyProperty="replyId">
+        INSERT INTO tbl_reply (board_id, content, writer)
+        VALUES (#{boardId}, #{content}, #{writer})
+    </insert>
+
+    <select id="readReply" resultMap="replyMap">
+        SELECT board_id, reply_id, writer, content, create_time, update_time
+        FROM tbl_reply
+        WHERE reply_id = #{replyId}
+    </select>
+
+    <update id="updateReply">
+        UPDATE tbl_reply
+        SET writer = #{writer},
+            content = #{content},
+            update_time = now()
+        WHERE board_id = #{boardId}
+    </update>
+
+    <delete id="deleteReply">
+        DELETE FROM tbl_reply
+        WHERE reply_id = #{replyId}
+    </delete>
+
+    <select id="getReplyCount" resultType="int">
+        SELECT count(*)
+        FROM tbl_reply
+        WHERE board_id = #{boardId}
+    </select>
+
+    <select id="getListWithReplyPaging"  resultMap="replyMap">
+        SELECT board_id, reply_id, writer, content, create_time, update_time
+        FROM tbl_reply
+        WHERE board_id = #{boardId}
+        ORDER BY reply_id
+        LIMIT #{criteria.startNum}, #{criteria.amount}
+    </select>
+
+</mapper>

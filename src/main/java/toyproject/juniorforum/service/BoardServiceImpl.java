@@ -2,13 +2,13 @@ package toyproject.juniorforum.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import toyproject.juniorforum.domain.BoardVO;
 import toyproject.juniorforum.mapper.BoardMapper;
 
 import java.util.List;
 
 import static toyproject.juniorforum.domain.DTO.*;
 import static toyproject.juniorforum.domain.Paging.*;
+import static toyproject.juniorforum.domain.VO.*;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +44,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void delete(int boardId) {
-        boardMapper.delete(boardId);
+    public int delete(int boardId) {
+        return boardMapper.delete(boardId);
     }
 }
