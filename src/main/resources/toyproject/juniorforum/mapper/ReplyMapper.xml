@@ -21,10 +21,9 @@
 
     <update id="updateReply">
         UPDATE tbl_reply
-        SET writer = #{writer},
-            content = #{content},
+        SET content = #{content},
             update_time = now()
-        WHERE board_id = #{boardId}
+        WHERE reply_id = #{replyId}
     </update>
 
     <delete id="deleteReply">

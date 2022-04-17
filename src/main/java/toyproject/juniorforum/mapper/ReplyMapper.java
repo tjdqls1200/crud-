@@ -20,7 +20,7 @@ public interface ReplyMapper {
     int createReply(ReplyDTO replyDTO);
     ReplyVO readReply(int replyId);
     int updateReply(ReplyDTO replyDTO);
-    int deleteReply(int reply_id);
+    int deleteReply(int replyId);
     List<ReplyVO> getListWithReplyPaging(@Param("criteria") Criteria criteria, @Param("boardId") int boardId);
     int getReplyCount(int boardId);
 

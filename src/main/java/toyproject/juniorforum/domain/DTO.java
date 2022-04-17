@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -52,9 +53,12 @@ public class DTO {
 
     @Data
     public static class ReplyDTO {
+        @Nullable
         private int replyId;
+        @NotNull
         private int boardId;
 
+        @NotEmpty
         private String writer;
         @NotEmpty
         private String content;

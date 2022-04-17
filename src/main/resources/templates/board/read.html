@@ -65,47 +65,159 @@
                 </div>
             </section>
         </div>
+        <!--/* Reply Update Model */-->
+        <div class="modal fade" id="reply-update-modal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">댓글 수정</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="bi bi-x"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <!-- 닉네임 입력 -->
+                            <div class="mb-3">
+                                <label class="form-label">작성자</label>
+                                <output class="form-control form-control-sm" id="modal-reply-update-writer">
+                            </div>
+                            <!-- 댓글 본문 입력 -->
+                            <div class="mb-3">
+                                <label class="form-label">댓글 내용</label>
+                                <textarea class="form-control form-control-sm" rows="3" id="modal-reply-update-content"></textarea>
+                            </div>
+                            <input type="hidden" id="modal-reply-update-reply-id">
+                            <!-- 전송 버튼 -->
+                            <button type="button"
+                                    class="btn btn-outline-primary btn-sm float-md-right"
+                                    id="reply-update-btn">수정 완료
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <!--/* Footer */-->
         <div th:replace="~{/fragment/layout/footer :: common_footer}"> </div>
     </div>
 </div>
+
 <script th:inline="javascript">
+    let boardId = [[${board.boardId}]];
+    let url = "/replies/" + boardId;
     $(function () {
         printReplyList();
     });
-    function printReplyList() {
-        let boardId = [[${board.boardId}]];
-        let url = "/replies/" + boardId;
-        $.get(url, function (response) {
-            let replies = "";
 
-            for (var i in response) {
-                replies += `
-                    <div class="d-flex mb-4">
-                        <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                        <div class="ms-3">
-                            <div class="font-weight-bold">&nbsp; ${response[i].writer}</div>
-                            <div class="btn-sm">작성일: ${response[i].createTime}</div>
-                            <text>&nbsp;&nbsp;${response[i].content}</text>
+    function printReplyList() {
+        $.get(url, function (response) {
+            let replyListHtml = "";
+
+            $(response).each(function (idx, reply) {
+                replyListHtml += `
+                    <div class="d-flex mb-5">
+                        <div class="btn btn-lg"><i class="bi bi-person-circle"></i></div>
+                        <div class="col-12">
+                            <div class="font-weight-bold">&nbsp ${reply.writer}</div>
+                            <div class="btn-sm">${reply.createTime}
+                                <button type="button" class="btn btn-sm btn-circle btn-outline-primary"
+                                onclick="openModal('${reply.replyId}', '${reply.writer}', '${reply.content}')"
+                                >
+                                <i class="bi bi-pencil-fill"></i>
+                                </button>
+                                <button class="btn btn-sm btn-circle btn-outline-dark"
+                                onclick="deleteReply(${reply.replyId})"><i class="bi bi-trash-fill"></i></button>
+                            </div>
+                            <div>
+                                <text>&nbsp;&nbsp;${reply.content}</text>
+                            </div>
                         </div>
-                        <hr>
-                    </div>`;
-            }
-            $(".reply-list").html(replies);
+                    </div>
+                    <hr width="935"></hr>`;
+            });
+            $(".reply-list").html(replyListHtml);
         }, "json");
-        $("button#comment-create-btn").click(function (e) {
-            $.post(url, {
-                writer: document.querySelector("#reply-writer").value,
-                content: document.querySelector("#reply-content").value,
-                boardId: document.querySelector("#reply-board-id").value
-            }, function (response) {
-                let message = (response.ok) ? "댓글이 등록되었습니다." : "댓글 등록이 실패했습니다.";
-                alert(message);
-                window.location.reload();
-            },"json");
+    }
+
+    $("button#reply-create").click( function (e) {
+        e.preventDefault();
+        let sendReplyData = {
+            "boardId" : boardId,
+            "writer" : document.querySelector("#reply-writer").value,
+            "content" : document.querySelector("#reply-content").value
+        };
+        $.ajax({
+            url: url,
+            contentType: "application/json;charset=UTF-8",
+            type: "POST",
+            data: JSON.stringify(sendReplyData),
+            success: function (response) {
+                alert("댓글이 등록되었습니다.");
+                printReplyList();
+            },
+            error: function (err) {
+                console.log(sendReplyData);
+                alert("댓글 작성 오류");
+            }
         });
+    });
+
+    function openModal(replyId, writer, content) {
+        $("#reply-update-modal").modal("toggle");
+        document.getElementById("modal-reply-update-writer").value = writer;
+        document.getElementById("modal-reply-update-content").value = content;
+        document.getElementById("modal-reply-update-reply-id").value = replyId;
+    }
+
+    $("button#reply-update-btn").click( function (e) {
+        e.preventDefault();
+        let sendUpdateReplyData = {
+            "boardId" : boardId,
+            "replyId" : parseInt(document.querySelector("#modal-reply-update-reply-id").value),
+            "writer" : document.querySelector("#modal-reply-update-writer").value,
+            "content" : document.querySelector("#modal-reply-update-content").value
+        };
+        $.ajax({
+            url: url,
+            contentType: "application/json;charset=UTF-8",
+            type: "PATCH",
+            data: JSON.stringify(sendUpdateReplyData),
+            success: function (response) {
+                alert("수정이 완료되었습니다.");
+                $("#reply-update-modal").modal("hide");
+                printReplyList();
+            },
+            error: function (err) {
+                console.log(sendUpdateReplyData);
+                alert("댓글 수정 오류");
+                $("#reply-update-modal").modal("hide");
+                printReplyList();
+            }
+        })
+    })
+    function deleteReply(deleteReplyId) {
+        let deleteUrl = url + "/" + deleteReplyId;
+        if (!confirm("댓글을 삭제하시겠어요?")) {
+            return false;
+        }
+        $.ajax({
+            url: deleteUrl,
+            contentType: "application/json;charset=UTF-8",
+            type: "DELETE",
+            success: function (response) {
+                alert("삭제가 완료되었습니다.");
+                printReplyList();
+            },
+            error: function (err) {
+                alert("댓글 삭제 오류");
+                console.log(sendDeleteReplyData);
+                printReplyList();
+            }
+        })
     }
 </script>
+
 <script th:inline="javascript">
     let paging = [[${criteria.listLink}]];
 
@@ -123,7 +235,6 @@
     });
 </script>
 <th:block th:replace="~{fragment/layout/config :: common_script}"></th:block>
-
 </body>
 
 </html>

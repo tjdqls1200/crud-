@@ -6,8 +6,12 @@ import toyproject.juniorforum.domain.DTO;
 import toyproject.juniorforum.domain.Paging;
 import toyproject.juniorforum.domain.Paging.Criteria;
 import toyproject.juniorforum.domain.VO;
+import toyproject.juniorforum.exception.BoardNotFoundException;
+import toyproject.juniorforum.exception.ReplyNotFoundException;
+import toyproject.juniorforum.mapper.BoardMapper;
 import toyproject.juniorforum.mapper.ReplyMapper;
 
+import java.util.Collections;
 import java.util.List;
 
 import static toyproject.juniorforum.domain.DTO.*;
@@ -17,6 +21,7 @@ import static toyproject.juniorforum.domain.VO.*;
 @Service
 public class ReplyServiceImpl implements ReplyService {
     private final ReplyMapper replyMapper;
+    private final BoardMapper boardMapper;
 
     @Override
     public int create(ReplyDTO replyDTO) {
@@ -25,7 +30,11 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     public ReplyVO read(int replyId) {
-        return replyMapper.readReply(replyId);
+        ReplyVO reply = replyMapper.readReply(replyId);
+        if (reply == null) {
+            throw new ReplyNotFoundException(replyId);
+        }
+        return reply;
     }
 
     @Override
@@ -38,15 +47,18 @@ public class ReplyServiceImpl implements ReplyService {
         return replyMapper.deleteReply(replyId);
     }
 
-    @Override
-    public int getTotal(int boardId) {
-        // 해당 board ID를 가진 reply 개수
-        return replyMapper.getReplyCount(boardId);
-    }
 
     @Override
     public List<ReplyVO> getList(Criteria criteria, int boardId) {
         criteria.calculateStarNum();
-        return replyMapper.getListWithReplyPaging(criteria, boardId);
+
+        if (boardMapper.read(boardId) == null) {
+            throw new BoardNotFoundException(boardId);
+        }
+        List<ReplyVO> replyList = replyMapper.getListWithReplyPaging(criteria, boardId);
+        if (replyList == null) {
+            replyList = Collections.emptyList();
+        }
+        return replyList;
     }
 }

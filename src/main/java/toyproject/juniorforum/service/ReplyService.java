@@ -17,7 +17,5 @@ public interface ReplyService {
 
     int delete(int replyId);
 
-    int getTotal(int boardId);
-
     List<ReplyVO> getList(Criteria criteria, int boardId);
 }

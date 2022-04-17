@@ -53,10 +53,9 @@ public class BoardController {
                 .content(boardSaveForm.getContent()
                         .replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", ""))
                 .build();
-        if (boardService.create(boardDTO) == 1){
-            redirectAttributes.addAttribute("boardId", boardDTO.getBoardId());
-            redirectAttributes.addFlashAttribute("result", "true");
-        }
+        boardService.create(boardDTO);
+        redirectAttributes.addAttribute("boardId", boardDTO.getBoardId());
+        redirectAttributes.addFlashAttribute("result", "true");
         log.info("--- create ---");
         return "redirect:/board/read";
     }
@@ -83,18 +82,16 @@ public class BoardController {
             log.info("errors = {}", bindingResult);
             return "board/update";
         }
-        if (boardService.update(board) == 1) {
-            redirectAttributes.addFlashAttribute("result", "true");
-        }
+        boardService.update(board);
+        redirectAttributes.addFlashAttribute("result", "true");
         return "redirect:/board/list" + criteria.getListLink();
     }
 
     @GetMapping("/delete")
     public String delete(Criteria criteria, int boardId, Model model, RedirectAttributes redirectAttributes) {
         log.info("--- delete ---");
-        if (boardService.delete(boardId) == 1) {
-            redirectAttributes.addFlashAttribute("result", "true");
-        }
+        boardService.delete(boardId);
+        redirectAttributes.addFlashAttribute("result", "true");
         return "redirect:/board/list" + criteria.getListLink();
     }
 }
