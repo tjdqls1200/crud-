@@ -68,7 +68,7 @@
                             <!-- Search Bar -->
                             <form action="#" th:action="@{/board/list}" name="searchForm" class="seachBar d-none d-sm-inline-block form-inline mr-auto mr-md-3 my-2 my-md-0 mw-100 navbar-search float-md-right">
                                 <div class="input-group">
-                                    <select name="type">
+                                    <select class="custom-select" name="type">
                                         <option value="C">내용</option>
                                         <option value="T">제목</option>
                                         <option value="W">작성자</option>
@@ -79,7 +79,7 @@
                                     </select>
                                     <label for="keyword"></label>
                                     <input type="text" id="keyword" name="keyword"
-                                           class="form-control bg-light border-0 small" placeholder="Search for..."
+                                           class="form-control bg-light border-0" placeholder="Search for..."
                                            aria-label="Search" aria-describedby="basic-addon2">
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" id="searchBar" type="button"

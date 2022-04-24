@@ -25,7 +25,7 @@
                 </div>
                 <div>
                     <label for="summernote" th:text="#{label.board.content}">내용</label>
-                    <textarea id="summernote" th:field="*{content}"
+                    <textarea id="summernote" th:field="*{content}" rows="7"
                               th:errorclass="field-error" class="form-control" placeholder="내용을 입력하세요.">
                     </textarea>
                     <div class="field-error" th:errors="*{content}">내용 오류</div>
@@ -41,13 +41,6 @@
                                 type="button" th:text="#{button.cancel}">취소</button>
                     </div>
                 </div>
-                <script>
-                    $('#summernote').summernote({
-                        placeholder: '내용을 입력하세요.',
-                        tabsize: 2,
-                        height: 300
-                    });
-                </script>
             </form>
         </div>
         <!-- Footer -->
@@ -55,6 +48,67 @@
     </div>
 </div>
 <th:block th:replace="~{fragment/layout/config :: common_script}"></th:block>
+<script>
+    $(document).ready(function () {
+        $('#summernote').summernote({
+            toolbar: [
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['style', ['bold', 'italic', 'underline','strikethrough', 'clear']],
+                ['color', ['forecolor','color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['insert',['picture']],
+                ['view', ['fullscreen', 'help']]
+            ],
+            fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
+            fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
+            placeholder: '내용을 입력하세요.',
+            height: 300,
+            minHeight: null,
+            maxHeight: null,
+            focus: true,
+            lang: "ko-KR",
+            callbacks: {
+                onImageUpload : function(files) {
+                    for (var i = 0; i < files.length; i++) {
+                        uploadSummernoteImageFile(files[i],this);
+                    }
+                },
+                onPaste: function (e) {
+                    var clipboardData = e.originalEvent.clipboardData;
+                    if (clipboardData && clipboardData.items && clipboardData.items.length) {
+                        var item = clipboardData.items[0];
+                        if (item.kind === 'file' && item.type.indexOf('image/') !== -1) {
+                            e.preventDefault();
+                        }
+                    }
+                },
+                onImageLinkInsert : function(url) {
+                    $img = $('<img>').attr({ src: url })
+                    $summernote.summernote('insertNode', $img[0]);
+                }
+            }
+        });
+    });
+    function uploadSummernoteImageFile(file, editor) {
+        let data = new FormData();
+        data.append("file", file);
+        $.ajax({
+            data : data,
+            type : "POST",
+            url : "/image",
+            contentType : false,
+            enctype : 'multipart/form-data',
+            processData : false,
+            success : function(response) {
+                console.log(response);
+                $(editor).summernote('insertImage', response, function($image) {
+                    $image.css('width', "50%");
+                });
+            }
+        });
+    }
+</script>
 </body>
 
 </html>

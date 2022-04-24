@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import toyproject.juniorforum.domain.DTO;
 import toyproject.juniorforum.exception.ReplyNotFoundException;
 import toyproject.juniorforum.service.ReplyService;
 
@@ -32,17 +33,13 @@ public class ReplyController {
     public ReplyVO read(@PathVariable int boardId, @PathVariable int replyId) {
         ReplyVO read = replyService.read(replyId);
         log.info("read : {}", read);
-
-        if (read == null) {
-            throw new ReplyNotFoundException(replyId);
-        }
         return read;
     }
 
-    @GetMapping("/{boardId}")
-    public List<ReplyVO> list(Criteria criteria, @PathVariable int boardId) {
+    @GetMapping("/{boardId}/paging/{pageNum}")
+    public ReplyPagingDTO list(Criteria criteria, @PathVariable int boardId, @PathVariable int pageNum) {
         log.info("--------- Reply List --------");
-        return replyService.getList(criteria, boardId);
+        return replyService.getList(criteria, boardId, pageNum);
     }
 
     @PostMapping("/{boardId}")

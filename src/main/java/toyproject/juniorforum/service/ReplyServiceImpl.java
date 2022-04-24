@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static toyproject.juniorforum.domain.DTO.*;
+import static toyproject.juniorforum.domain.Paging.*;
 import static toyproject.juniorforum.domain.VO.*;
 
 @RequiredArgsConstructor
@@ -49,16 +50,18 @@ public class ReplyServiceImpl implements ReplyService {
 
 
     @Override
-    public List<ReplyVO> getList(Criteria criteria, int boardId) {
+    public ReplyPagingDTO getList(Criteria criteria, int boardId, int pageNum) {
         criteria.calculateStarNum();
 
         if (boardMapper.read(boardId) == null) {
             throw new BoardNotFoundException(boardId);
         }
-        List<ReplyVO> replyList = replyMapper.getListWithReplyPaging(criteria, boardId);
-        if (replyList == null) {
-            replyList = Collections.emptyList();
+        criteria.setPageNum(pageNum);
+        List<ReplyVO> list = replyMapper.getListWithReplyPaging(criteria, boardId);
+        if (list == null) {
+            list = Collections.emptyList();
         }
-        return replyList;
+        PageDTO pageDTO = new PageDTO(5, replyMapper.getReplyCount(boardId), criteria);
+        return new ReplyPagingDTO(list, pageDTO);
     }
 }

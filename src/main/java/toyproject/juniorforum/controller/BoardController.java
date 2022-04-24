@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toyproject.juniorforum.service.BoardService;
 
@@ -50,8 +51,7 @@ public class BoardController {
         BoardDTO boardDTO = BoardDTO.builder()
                 .title(boardSaveForm.getTitle())
                 .writer("이성빈")
-                .content(boardSaveForm.getContent()
-                        .replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", ""))
+                .content(boardSaveForm.getContent())
                 .build();
         boardService.create(boardDTO);
         redirectAttributes.addAttribute("boardId", boardDTO.getBoardId());
@@ -71,6 +71,7 @@ public class BoardController {
             model.addAttribute("board", boardVO.convertToUpdateDTO());
             log.info("--- updateForm ---");
         }
+        log.info("read board = {}", boardVO.convertDTO().getContent());
         return "board/" + requestType;
     }
 
@@ -94,4 +95,5 @@ public class BoardController {
         redirectAttributes.addFlashAttribute("result", "true");
         return "redirect:/board/list" + criteria.getListLink();
     }
+
 }

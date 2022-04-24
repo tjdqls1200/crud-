@@ -9,6 +9,10 @@ import org.springframework.lang.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
+
+import static toyproject.juniorforum.domain.Paging.*;
+import static toyproject.juniorforum.domain.VO.*;
 
 public class DTO {
     @Data
@@ -62,5 +66,13 @@ public class DTO {
         private String writer;
         @NotEmpty
         private String content;
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class ReplyPagingDTO {
+        List<ReplyVO> list;
+
+        PageDTO pageDTO;
     }
 }

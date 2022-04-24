@@ -2,6 +2,7 @@ package toyproject.juniorforum.domain;
 
 import lombok.*;
 import org.apache.tomcat.jni.Local;
+import org.springframework.format.annotation.DateTimeFormat;
 import toyproject.juniorforum.domain.DTO.BoardDTO;
 import toyproject.juniorforum.domain.DTO.BoardUpdateForm;
 
@@ -50,8 +51,9 @@ public class VO {
         private int boardId;
         private String writer;
         private String content;
+
         private LocalDateTime createTime;
+
         private LocalDateTime updateTime;
     }
-
 }

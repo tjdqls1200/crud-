@@ -26,10 +26,11 @@
                 <label for="read" th:text="#{label.board.read}">조회수</label>
                 <input type="text" id="read" class="form-control" th:field="*{hit}" readonly>
             </div>
-            <div>
-                <label for="contents" th:text="#{label.board.content}">contents</label>
-                <textarea type="text" id="contents" rows="10" class="form-control" th:field="*{content}" readonly></textarea>
+            <div style="height: 50px"></div>
+            <div class="d-flex">
+                <div class="read-content-html"></div>
             </div>
+
             <div class="row" style="margin-top: 20px">
                 <div class="col text-center">
                     <button class="w-25 btn btn-primary btn-lg" id="goUpdate" onclick="location.href='#'"
@@ -45,25 +46,28 @@
                     </button>
                 </div>
             </div>&nbsp;
-            <!--/* reply */-->
-            <section class="mb-5">
-                <div class="card bg-light">
-                    <div class="card-body">
-                        <div class="d-flex mb-4">
-                            <div class="reply-list"></div>
+        </div>
+        <!--/* reply */-->
+        <div class="mb-5 card bg-light">
+            <div class="card-body">
+                <div class="mb-4">
+                    <form style="height: 200px">
+                        <div class="form-inline mb-2">
+                            <input type="hidden" id="reply-board-id" value="${board.boardId}">
+                            <label for="reply-writer">작성자</label>
+                            <input type="text" class="form-control ml-2" id="reply-writer">
                         </div>
-                        <form class="mb-4">
-                            <div class="form-inline mb-2">
-                                <input type="hidden" id="reply-board-id" value="${board.boardId}">
-                                <label for="reply-writer">작성자</label>
-                                <input type="text" class="form-control ml-2" id="reply-writer">
-                            </div>
-                            <textarea class="form-control" rows="3" placeholder="내용을 입력하세요.." id="reply-content"></textarea>
-                            <button type="button" class="btn btn-dark mt-3 float-md-right" id="reply-create">등록</button>
-                        </form>
-                    </div>
+                        <textarea class="form-control" rows="3" placeholder="내용을 입력하세요.." id="reply-content"></textarea>
+                        <button type="button" class="btn btn-dark mt-3 float-md-right" id="reply-create">등록</button>
+                    </form>
                 </div>
-            </section>
+                <div class="d-flex mb-4">
+                    <div class="reply-list"></div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="reply-paging"></div>
+            </div>
         </div>
         <!--/* Reply Update Model */-->
         <div class="modal fade" id="reply-update-modal" tabindex="-1">
@@ -83,7 +87,7 @@
                             <!-- 댓글 본문 입력 -->
                             <div class="mb-3">
                                 <label class="form-label">댓글 내용</label>
-                                <textarea class="form-control form-control-sm" rows="3" id="modal-reply-update-content"></textarea>
+                                <textarea class="form-control form-control-sm" rows="3" id="modal-reply-update-content" readonly></textarea>
                             </div>
                             <input type="hidden" id="modal-reply-update-reply-id">
                             <!-- 전송 버튼 -->
@@ -102,20 +106,27 @@
         <div th:replace="~{/fragment/layout/footer :: common_footer}"> </div>
     </div>
 </div>
-
 <script th:inline="javascript">
+    let content = [[${board.content}]];
     let boardId = [[${board.boardId}]];
-    let url = "/replies/" + boardId;
+    let pageNum = 1;
+    let url = "";
     $(function () {
+        $("div.read-content-html").html(content);
         printReplyList();
     });
 
     function printReplyList() {
+        url = "/replies/" + boardId + "/paging/" + pageNum;
         $.get(url, function (response) {
             let replyListHtml = "";
+            let replyPagingHtml = "";
+            let list = response.list;
+            let pageInfo = response.pageDTO;
 
-            $(response).each(function (idx, reply) {
+            $(list).each(function (idx, reply) {
                 replyListHtml += `
+                    <hr width="935"></hr>
                     <div class="d-flex mb-5">
                         <div class="btn btn-lg"><i class="bi bi-person-circle"></i></div>
                         <div class="col-12">
@@ -130,15 +141,50 @@
                                 onclick="deleteReply(${reply.replyId})"><i class="bi bi-trash-fill"></i></button>
                             </div>
                             <div>
-                                <text>&nbsp;&nbsp;${reply.content}</text>
+                                <pre>${reply.content}</pre>
                             </div>
                         </div>
-                    </div>
-                    <hr width="935"></hr>`;
+                    </div>`;
             });
             $(".reply-list").html(replyListHtml);
+            console.log(pageInfo);
+            replyPagingHtml += `
+                <ul class="pagination justify-content-center">`;
+                if (pageInfo.prev) {
+                    let prev_num = pageInfo.startNum - 1;
+                    replyPagingHtml += `
+                    <li class="page-item">
+                        <a class="page-link" href="` + prev_num +  `">&lt;이전</a>
+                    </li>`;
+                }
+                for (let i = pageInfo.startPage; i <= pageInfo.endPage; i++) {
+                    replyPagingHtml += `
+                    <li class="page-item `;
+                    if (pageInfo.criteria.pageNum === i) {
+                        replyPagingHtml += `active`;
+                    }
+                    replyPagingHtml += `">
+                        <a class="page-link" href="` + i + `">` + i + `</a>
+                    </li>`;
+                }
+                if (pageInfo.next) {
+                    let next_num = pageInfo.endPage + 1;
+                    replyPagingHtml += `
+                        <li class="page-item">
+                            <a class="page-link" href="` + next_num +  `">&gt;다음</a>
+                        </li>`;
+                }
+                replyPagingHtml += `
+                </ui>`;
+            $(".reply-paging").html(replyPagingHtml);
         }, "json");
     }
+
+    $(document).on('click', '.page-link', function (e){
+        e.preventDefault();
+        pageNum = $(this).attr("href");
+        printReplyList();
+    });
 
     $("button#reply-create").click( function (e) {
         e.preventDefault();
