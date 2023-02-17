@@ -57,10 +57,10 @@ public class DTO {
 
     @Data
     public static class ReplyDTO {
-        @Nullable
-        private int replyId;
         @NotNull
         private int boardId;
+
+        private int replyId;
 
         @NotEmpty
         private String writer;

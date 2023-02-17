@@ -82,12 +82,12 @@
                             <!-- 닉네임 입력 -->
                             <div class="mb-3">
                                 <label class="form-label">작성자</label>
-                                <output class="form-control form-control-sm" id="modal-reply-update-writer">
+                                <output class="form-control form-control-sm" id="modal-reply-update-writer" th:readonly>
                             </div>
                             <!-- 댓글 본문 입력 -->
                             <div class="mb-3">
                                 <label class="form-label">댓글 내용</label>
-                                <textarea class="form-control form-control-sm" rows="3" id="modal-reply-update-content" readonly></textarea>
+                                <input class="form-control form-control-sm" rows="3" id="modal-reply-update-content"></input>
                             </div>
                             <input type="hidden" id="modal-reply-update-reply-id">
                             <!-- 전송 버튼 -->
@@ -194,7 +194,7 @@
             "content" : document.querySelector("#reply-content").value
         };
         $.ajax({
-            url: url,
+            url: "/replies/",
             contentType: "application/json;charset=UTF-8",
             type: "POST",
             data: JSON.stringify(sendReplyData),
@@ -225,7 +225,7 @@
             "content" : document.querySelector("#modal-reply-update-content").value
         };
         $.ajax({
-            url: url,
+            url: "/replies/" + boardId,
             contentType: "application/json;charset=UTF-8",
             type: "PATCH",
             data: JSON.stringify(sendUpdateReplyData),
@@ -243,7 +243,7 @@
         })
     })
     function deleteReply(deleteReplyId) {
-        let deleteUrl = url + "/" + deleteReplyId;
+        let deleteUrl = "/replies/" + deleteReplyId;
         if (!confirm("댓글을 삭제하시겠어요?")) {
             return false;
         }

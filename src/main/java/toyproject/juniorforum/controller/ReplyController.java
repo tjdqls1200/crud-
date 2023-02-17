@@ -42,14 +42,15 @@ public class ReplyController {
         return replyService.getList(criteria, boardId, pageNum);
     }
 
-    @PostMapping("/{boardId}")
-    public ResponseEntity<ReplyDTO> create(@PathVariable int boardId, @Validated @RequestBody ReplyDTO replyDTO,
+    @PostMapping
+    public ResponseEntity<ReplyDTO> create(@Validated @RequestBody ReplyDTO replyDTO,
                                            BindingResult bindingResult) {
-        replyService.create(replyDTO);
+        log.info("------------ test --------------");
+        final int replyId = replyService.create(replyDTO);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{replyId}")
-                .buildAndExpand(replyDTO.getReplyId())
+                .buildAndExpand(replyId)
                 .toUri();
         log.info("--------- reply create --------");
         return ResponseEntity.created(uri).build();
@@ -63,8 +64,8 @@ public class ReplyController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping("/{boardId}/{replyId}")
-    public ResponseEntity<String> delete(@PathVariable int boardId, @PathVariable int replyId) {
+    @DeleteMapping("/{replyId}")
+    public ResponseEntity<String> delete(@PathVariable int replyId) {
         log.info("------------ reply delete ----------");
         replyService.delete(replyId);
         return ResponseEntity.status(HttpStatus.OK).build();
